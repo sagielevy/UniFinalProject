@@ -18,8 +18,6 @@ namespace Assets.Scripts.Debug.PlotGraph
 
         private void Awake()
         {
-            // DEBUG ONLY! REMOVE AFTERWARDS
-            PitchOffset = new Offsets(200, 400, 50, 0.01f);
         }
 
         void Start()
@@ -39,7 +37,7 @@ namespace Assets.Scripts.Debug.PlotGraph
 
         void FixedUpdate()
         {
-            Graph.channel[0].Feed(MicIn.PitchValue); //Mathf.Sin(Time.time));
+            Graph.channel[0].Feed(Graph.YMax - MicIn.PitchValue); //Mathf.Sin(Time.time));
         }
 
     }

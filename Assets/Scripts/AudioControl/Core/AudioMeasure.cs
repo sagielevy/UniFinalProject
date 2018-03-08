@@ -21,6 +21,7 @@ namespace Assets.Scripts.AudioControl.Core
         private const float RefValue = 0.1f;
         private const float Threshold = 0.002f;
         private const float minDbValue = -160;
+        private const float acceptedChangeInPitch = 0.4f;
 
 
         float[] _samples;
@@ -96,12 +97,12 @@ namespace Assets.Scripts.AudioControl.Core
 
             // we try to correct the PitchValue if the jump was too large
             var variance = PitchValue / OldPitchValue;
-            if (DbValue != minDbValue && OldDbValue != minDbValue && variance > 1.5)
+            if (/*DbValue != minDbValue && OldDbValue != minDbValue && */variance > 1.5)
             {
                 for (i = 2; i < 10; i++)
                 {
                     var correctedVariance = (i * PitchValue) / OldPitchValue;
-                    if (correctedVariance < 1.2 && correctedVariance > 0.8)
+                    if (correctedVariance < 1 + acceptedChangeInPitch && correctedVariance > 1 - acceptedChangeInPitch)
                     {
                         PitchValue /= i;
                         break;

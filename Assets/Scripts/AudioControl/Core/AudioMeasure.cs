@@ -61,7 +61,7 @@ namespace Assets.Scripts.AudioControl.Core
             float maxV = 0;
             var maxN = 0;
             for (i = 0; i < QSamples; i++)
-            { 
+            {
                 // find max 
                 if (!(_spectrum[i] > maxV) || !(_spectrum[i] > Threshold))
                     continue;

@@ -9,6 +9,7 @@ namespace Assets.Scripts
     using System.Collections;
     using UnityEngine.UI;
     using Assets.Scripts.AudioControl;
+    using Assets.Scripts.AudioControl.Core;
 
     public class NoteFinder : MonoBehaviour
     {

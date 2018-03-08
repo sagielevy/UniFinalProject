@@ -37,6 +37,10 @@ namespace Assets.Scripts.AudioControl.Core
             Audio = GetComponent<AudioSource>();
             Audio.clip = Microphone.Start(null, true, 10, samplerate);
             Audio.loop = true; // Set the AudioClip to loop
+
+            // Kill latency
+            while (!(Microphone.GetPosition(null) > 0)) { }
+
             string audioInputDevice = Microphone.devices[0];
 
             while (!(Microphone.GetPosition(audioInputDevice) > 0)) { } // Wait until the recording has started

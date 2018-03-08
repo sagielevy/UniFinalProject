@@ -12,6 +12,7 @@ namespace Assets.Scripts
         public SpriteRenderer MarkHit;
         public AudioMeasure MicIn;
         public int MaxNumOfMarks = 1000;
+        public int TailLength = 100;
 
         private Offsets PitchOffset, DbOffset;
         private PitchControl PitchControl;
@@ -36,11 +37,11 @@ namespace Assets.Scripts
             GridWidth = GetComponent<SpriteRenderer>().sprite.bounds.size.x;
             GridHeight = GetComponent<SpriteRenderer>().sprite.bounds.size.y;
 
-            // TEMP FOR DEBUG
             // Create a single hit and make it a child
-            Hits[0] = Instantiate(MarkHit);
-            Hits[0].transform.parent = transform;
-            Hits[0].gameObject.SetActive(true);
+            Hits[HitIndex] = Instantiate(MarkHit);
+            Hits[HitIndex].transform.parent = transform;
+            Hits[HitIndex].gameObject.SetActive(true);
+            HitIndex++;
         }
 
         private void FixedUpdate()
@@ -48,16 +49,36 @@ namespace Assets.Scripts
             float xPos = PitchControl.SoundForce(MicIn.PitchValue) * (GridWidth / 2);
             //float yPos = DecibelControl.SoundForce(MicIn.DbValue) * (GridHeight / 2);
 
+            // Init new hit
+            if (Hits[HitIndex] == null)
+            {
+                Hits[HitIndex] = Instantiate(MarkHit);
+                Hits[HitIndex].transform.parent = transform;
+                Hits[HitIndex].gameObject.SetActive(true);
+            }
+
             // Move hit relative to grid size
-            Hits[0].transform.position = new Vector3(xPos,
-                                                     Hits[0].transform.position.y, 
-                                                     Hits[0].transform.position.z);
+            Hits[HitIndex].transform.position = new Vector3(xPos,
+                                                     Hits[HitIndex].transform.position.y, 
+                                                     Hits[HitIndex].transform.position.z);
+
+            // Cyclic growth
+            HitIndex = ++HitIndex % MaxNumOfMarks;
+
+            // Update colors for all hits
+            for (int i = 0; i < MaxNumOfMarks; i++)
+            {
+                if (Hits[i] != null)
+                {
+                    ChangeHitColor(i);
+                }
+            }
         }
 
-        private void ChangeHitColor(int index)
+        private void ChangeHitColor(int currIndex)
         {
-            //hits[index].color = Color.Lerp(Color.black, Color.white, hitIndex + count cyclic.. / MaxNumOfMarks);
-
+            int distFromHeadClamped = Mathf.Clamp((currIndex <= HitIndex) ? HitIndex - currIndex : MaxNumOfMarks - currIndex + HitIndex, 0, TailLength);
+            Hits[currIndex].color = Color.Lerp(Color.black, Color.white, distFromHeadClamped / TailLength);
         }
     }
 }

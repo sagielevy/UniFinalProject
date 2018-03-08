@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 600fad7f597fb5c4b99d0b7be3c061ea
+timeCreated: 1520510540
+licenseType: Free
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_PersistentViewDataDictionary: {instanceID: 0}
+  - lineMaterial: {fileID: 2100000, guid: d0d9f2acde7458a4d81cb2cf3cf444f5, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

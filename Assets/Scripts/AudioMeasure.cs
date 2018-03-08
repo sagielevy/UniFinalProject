@@ -12,6 +12,7 @@ namespace Assets.Scripts
         public float DbValue { get; private set; }
         public float PitchValue { get; private set; }
         public float MelValue { get; private set; }
+        public float OldPitchValue { get; private set; }
         public float OldDbValue { get; private set; }
 
         private AudioSource Audio;
@@ -49,6 +50,9 @@ namespace Assets.Scripts
 
         void AnalyzeSound()
         {
+            OldPitchValue = PitchValue;
+            OldDbValue = DbValue;
+
             GetComponent<AudioSource>().GetOutputData(_samples, 0); // fill array with samples
             int i;
             float sum = 0;
@@ -80,18 +84,24 @@ namespace Assets.Scripts
                 freqN += 0.5f * (dR * dR - dL * dL);
             }
 
-            var oldPitchValue = PitchValue;
-            
             PitchValue = freqN * (AudioSettings.outputSampleRate / 2) / QSamples; // convert index to frequency
 
-            var variance = PitchValue > oldPitchValue 
-                ? PitchValue / oldPitchValue 
-                : oldPitchValue / PitchValue;
-            if (DbValue != minDbValue && variance > 1.5)
+            //var variance = PitchValue > OldPitchValue 
+            //    ? PitchValue / OldPitchValue 
+            //    : OldPitchValue / PitchValue;
+
+            // we try to correct the PitchValue if the jump was too large
+            var variance = PitchValue / OldPitchValue;
+            if (DbValue != minDbValue && OldDbValue != minDbValue && variance > 1.5)
             {
                 for(i = 2; i < 10; i++)
                 {
-                    if(Mathf.Abs(pi))
+                    var correctedVariance = (i * PitchValue) / OldPitchValue;
+                    if(correctedVariance < 1.2 && correctedVariance > 0.8)
+                    {
+                        PitchValue /= i;
+                        break;
+                    }
                 }
             }
         }

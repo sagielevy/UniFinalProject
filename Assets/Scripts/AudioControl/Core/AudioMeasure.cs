@@ -12,12 +12,16 @@ namespace Assets.Scripts.AudioControl.Core
         public float DbValue { get; private set; }
         public float PitchValue { get; private set; }
         public float MelValue { get; private set; }
+        private float OldPitchValue { get; set; }
+        private float OldDbValue { get; set; }
 
         private AudioSource Audio;
         private int samplerate = 44100;
         private const int QSamples = 1024;
         private const float RefValue = 0.1f;
         private const float Threshold = 0.002f;
+        private const float minDbValue = -160;
+
 
         float[] _samples;
         private float[] _spectrum;
@@ -46,6 +50,9 @@ namespace Assets.Scripts.AudioControl.Core
 
         void AnalyzeSound()
         {
+            OldPitchValue = PitchValue;
+            OldDbValue = DbValue;
+
             GetComponent<AudioSource>().GetOutputData(_samples, 0); // fill array with samples
             int i;
             float sum = 0;
@@ -55,8 +62,8 @@ namespace Assets.Scripts.AudioControl.Core
             }
             RmsValue = Mathf.Sqrt(sum / QSamples); // rms = square root of average
             DbValue = 20 * Mathf.Log10(RmsValue / RefValue); // calculate dB
-            if (DbValue < -160) DbValue = -160; // clamp it to -160dB min
-                                                // get sound spectrum
+            if (DbValue < minDbValue) DbValue = minDbValue; // clamp it to -160dB min
+                                                            // get sound spectrum
             GetComponent<AudioSource>().GetSpectrumData(_spectrum, 0, FFTWindow.BlackmanHarris);
             float maxV = 0;
             var maxN = 0;
@@ -78,6 +85,25 @@ namespace Assets.Scripts.AudioControl.Core
             }
 
             PitchValue = freqN * (AudioSettings.outputSampleRate / 2) / QSamples; // convert index to frequency
+
+            //var variance = PitchValue > OldPitchValue 
+            //    ? PitchValue / OldPitchValue 
+            //    : OldPitchValue / PitchValue;
+
+            // we try to correct the PitchValue if the jump was too large
+            var variance = PitchValue / OldPitchValue;
+            if (DbValue != minDbValue && OldDbValue != minDbValue && variance > 1.5)
+            {
+                for (i = 2; i < 10; i++)
+                {
+                    var correctedVariance = (i * PitchValue) / OldPitchValue;
+                    if (correctedVariance < 1.2 && correctedVariance > 0.8)
+                    {
+                        PitchValue /= i;
+                        break;
+                    }
+                }
+            }
         }
     }
 }

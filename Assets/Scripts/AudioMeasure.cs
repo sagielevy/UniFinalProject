@@ -12,12 +12,15 @@ namespace Assets.Scripts
         public float DbValue { get; private set; }
         public float PitchValue { get; private set; }
         public float MelValue { get; private set; }
+        public float OldDbValue { get; private set; }
 
         private AudioSource Audio;
         private int samplerate = 44100;
         private const int QSamples = 1024;
         private const float RefValue = 0.1f;
         private const float Threshold = 0.002f;
+        private const float minDbValue = -160;
+        
 
         float[] _samples;
         private float[] _spectrum;
@@ -55,7 +58,7 @@ namespace Assets.Scripts
             }
             RmsValue = Mathf.Sqrt(sum / QSamples); // rms = square root of average
             DbValue = 20 * Mathf.Log10(RmsValue / RefValue); // calculate dB
-            if (DbValue < -160) DbValue = -160; // clamp it to -160dB min
+            if (DbValue < minDbValue) DbValue = minDbValue; // clamp it to -160dB min
                                                 // get sound spectrum
             GetComponent<AudioSource>().GetSpectrumData(_spectrum, 0, FFTWindow.BlackmanHarris);
             float maxV = 0;
@@ -77,7 +80,20 @@ namespace Assets.Scripts
                 freqN += 0.5f * (dR * dR - dL * dL);
             }
 
+            var oldPitchValue = PitchValue;
+            
             PitchValue = freqN * (AudioSettings.outputSampleRate / 2) / QSamples; // convert index to frequency
+
+            var variance = PitchValue > oldPitchValue 
+                ? PitchValue / oldPitchValue 
+                : oldPitchValue / PitchValue;
+            if (DbValue != minDbValue && variance > 1.5)
+            {
+                for(i = 2; i < 10; i++)
+                {
+                    if(Mathf.Abs(pi))
+                }
+            }
         }
     }
 }

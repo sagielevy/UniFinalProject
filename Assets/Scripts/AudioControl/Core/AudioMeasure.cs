@@ -27,6 +27,37 @@ namespace Assets.Scripts.AudioControl.Core
         private float[] _spectrum;
         private float _fSample;
 
+        private struct ValueAndIndex : IComparable<ValueAndIndex>
+        {
+            private float value;
+            private int index;
+
+            public ValueAndIndex(float value, int index)
+            {
+                this.value = value;
+                this.index = index;
+            }
+
+            public int CompareTo(ValueAndIndex other)
+            {
+                if(value > other.value)
+                {
+                    return 1;
+                }
+                else if (value < other.value)
+                {
+                    return -1;
+                }
+
+                return 0;
+            }
+
+            public override string ToString()
+            {
+                return "Value: " + value + ", index: " + index;
+            }
+        }
+
         void Start()
         {
             AudioSettings.Reset(new AudioConfiguration
@@ -71,6 +102,22 @@ namespace Assets.Scripts.AudioControl.Core
             if (DbValue < minDbValue) DbValue = minDbValue; // clamp it to -160dB min
                                                             // get sound spectrum
             GetComponent<AudioSource>().GetSpectrumData(_spectrum, 0, FFTWindow.BlackmanHarris);
+            ValueAndIndex[] samplesAndIndices = new ValueAndIndex[QSamples];
+
+            for (i = 0; i < QSamples; i++)
+            {
+                samplesAndIndices[i] = new ValueAndIndex(_spectrum[i], i);
+            }
+
+            Array.Sort(samplesAndIndices);
+
+            for (i = 0; i < 20; i++)
+            {
+                UnityEngine.Debug.Log(samplesAndIndices[i]);
+            }
+
+            UnityEngine.Debug.Log("\n");
+
             float maxV = 0;
             var maxN = 0;
             for (i = 0; i < QSamples; i++)

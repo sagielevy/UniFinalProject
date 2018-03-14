@@ -102,7 +102,8 @@ namespace Assets.Scripts.AudioControl.Core
             OldPitchValue = PitchValue;
             OldDbValue = DbValue;
 
-            while (!(Microphone.GetPosition(audioInputDevice) > 0)) { } // Wait until the recording has started
+            // Wait until the recording has started. Should clear delay
+            while (!(Microphone.GetPosition(audioInputDevice) > 0)) { }
 
             GetComponent<AudioSource>().GetOutputData(_samples, 0); // fill array with samples
             int i;

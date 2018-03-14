@@ -15,7 +15,6 @@ namespace Assets.Scripts
     {
         public GameObject audioInputObject;
         public float threshold = 1.0f;
-        //MicrophoneInput micIn;
         AudioMeasure micIn;
 
         public Text debug;
@@ -25,30 +24,14 @@ namespace Assets.Scripts
         {
             if (audioInputObject == null)
                 audioInputObject = GameObject.Find("MicMonitor");
-            //micIn = (MicrophoneInput)audioInputObject.GetComponent("MicrophoneInput");
+
             micIn = audioInputObject.GetComponent<AudioMeasure>();
 
             debug.text = "";
         }
 
-        // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
-            //int rms = (int)micIn.RmsValue;
-            //int db = (int)micIn.DbValue;
-            //int pitch = (int)micIn.PitchValue;
-            //int f = (int)micIn.GetFundamentalFrequency(); // Get the frequency from our MicrophoneInput script
-            //int v = (int)micIn.GetAveragedVolume();
-
-            //if (f >= 261 && f <= 262) // Compare the frequency to known value, take possible rounding error in to account
-            //{
-            //    debug.text = "Middle-C played!";
-            //}
-            //else
-            //{
-            //    debug.text = "Play another note...";
-            //}
-
             debug.text = "Pitch: " + micIn.PitchValue + "\nMel: " + Helpers.HertzToMel(micIn.PitchValue) + "\nRms: " + micIn.RmsValue + "\ndB: " + micIn.DbValue;
         }
     }

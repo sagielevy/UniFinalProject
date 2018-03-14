@@ -26,7 +26,7 @@ namespace Assets.Scripts
         private void Awake()
         {
             // DEBUG ONLY! REMOVE AFTERWARDS
-            PitchOffset = new Offsets(80, 550, 50, 0.01f);
+            PitchOffset = new Offsets(107, 550, 90, 0.01f);
         }
 
         private void Start()

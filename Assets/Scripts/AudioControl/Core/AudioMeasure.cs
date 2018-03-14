@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,12 +17,14 @@ namespace Assets.Scripts.AudioControl.Core
         private float OldDbValue { get; set; }
 
         private AudioSource Audio;
-        private int samplerate = 44100;
+        private string audioInputDevice;
+        private const int samplerate = 44100;
         private const int QSamples = 1024;
         private const float RefValue = 0.1f;
         private const float Threshold = 0.002f;
         private const float minDbValue = -160;
         private const float acceptedChangeInPitch = 0.4f;
+        private const int NUM_IMPORTANT_SAMPLES = 20;
 
         float[] _samples;
         private float[] _spectrum;
@@ -29,8 +32,8 @@ namespace Assets.Scripts.AudioControl.Core
 
         private struct ValueAndIndex : IComparable<ValueAndIndex>
         {
-            private float value;
-            private int index;
+            public readonly float value;
+            public readonly int index;
 
             public ValueAndIndex(float value, int index)
             {
@@ -38,13 +41,14 @@ namespace Assets.Scripts.AudioControl.Core
                 this.index = index;
             }
 
+            // Ascending order (first is smallest)
             public int CompareTo(ValueAndIndex other)
             {
-                if(value > other.value)
+                if (value < other.value)
                 {
                     return 1;
                 }
-                else if (value < other.value)
+                else if (value > other.value)
                 {
                     return -1;
                 }
@@ -55,6 +59,14 @@ namespace Assets.Scripts.AudioControl.Core
             public override string ToString()
             {
                 return "Value: " + value + ", index: " + index;
+            }
+        }
+
+        private class IndexComparer : IComparer<ValueAndIndex>
+        {
+            public int Compare(ValueAndIndex x, ValueAndIndex y)
+            {
+                return x.index - y.index;
             }
         }
 
@@ -71,7 +83,7 @@ namespace Assets.Scripts.AudioControl.Core
 
             Audio = GetComponent<AudioSource>();
 
-            string audioInputDevice = Microphone.devices[0];
+            audioInputDevice = Microphone.devices[0];
 
             Audio.clip = Microphone.Start(audioInputDevice, true, 10, AudioSettings.outputSampleRate);
             Audio.loop = true; // Set the AudioClip to loop
@@ -89,6 +101,8 @@ namespace Assets.Scripts.AudioControl.Core
         {
             OldPitchValue = PitchValue;
             OldDbValue = DbValue;
+
+            while (!(Microphone.GetPosition(audioInputDevice) > 0)) { } // Wait until the recording has started
 
             GetComponent<AudioSource>().GetOutputData(_samples, 0); // fill array with samples
             int i;
@@ -109,52 +123,108 @@ namespace Assets.Scripts.AudioControl.Core
                 samplesAndIndices[i] = new ValueAndIndex(_spectrum[i], i);
             }
 
+            // Get a sub array of the most important samples
             Array.Sort(samplesAndIndices);
 
-            for (i = 0; i < 20; i++)
+            //for (i = 0; i < 20; i++)
+            //{
+            //    UnityEngine.Debug.Log(Time.frameCount + " no." + i + ", " + samplesAndIndices[i]);
+            //}
+
+            // BAD LOGIC
+            // Find max - TODO This is bad, we need GCD instead
+            //float maxV = 0;
+            //var maxN = 0;
+            //for (i = 0; i < QSamples; i++)
+            //{
+            //    if (!(_spectrum[i] > maxV) || !(_spectrum[i] > Threshold))
+            //        continue;
+
+            //    maxV = _spectrum[i];
+            //    maxN = i; // maxN is the index of max
+            //}
+            //float freqN = maxN; // pass the index to a float variable
+            //if (maxN > 0 && maxN < QSamples - 1)
+            //{ // interpolate index using neighbours
+            //    var dL = _spectrum[maxN - 1] / _spectrum[maxN];
+            //    var dR = _spectrum[maxN + 1] / _spectrum[maxN];
+            //    freqN += 0.5f * (dR * dR - dL * dL);
+            //}
+
+            //PitchValue = freqN * (AudioSettings.outputSampleRate / 2) / QSamples; // convert index to frequency
+
+            // GCD APPROXIMATION
+            // Select only the most important samples. Re-sort them by index
+            Array.Resize(ref samplesAndIndices, NUM_IMPORTANT_SAMPLES);
+            Array.Sort(samplesAndIndices, new IndexComparer());
+            PitchValue = FindApproximateGCD(FindLocalMaximums(samplesAndIndices)) * (AudioSettings.outputSampleRate / 2) / QSamples; // convert index to frequency
+
+            //// we try to correct the PitchValue if the jump was too large
+            //var variance = PitchValue / OldPitchValue;
+
+            //if (/*DbValue != minDbValue && OldDbValue != minDbValue && */variance > 1.5)
+            //{
+            //    for (i = 2; i < 10; i++)
+            //    {
+            //        var correctedVariance = PitchValue / (i * OldPitchValue);
+
+            //        if (correctedVariance < 1 + acceptedChangeInPitch && correctedVariance > 1 - acceptedChangeInPitch)
+            //        {
+            //            PitchValue /= i;
+            //            break;
+            //        }
+            //    }
+            //}
+        }
+
+        // Return hz index of any sample i that has a sample i-1 with lower value and sample i+1 with lower value
+        private int[] FindLocalMaximums(ValueAndIndex[] samplesAndIndices)
+        {
+            List<int> locals = new List<int>();
+
+            for (int i = 0; i < samplesAndIndices.Length; i++)
             {
-                UnityEngine.Debug.Log(samplesAndIndices[i]);
-            }
-
-            UnityEngine.Debug.Log("\n");
-
-            float maxV = 0;
-            var maxN = 0;
-            for (i = 0; i < QSamples; i++)
-            {
-                // Find max - TODO This is bad, we need GCD instead
-                if (!(_spectrum[i] > maxV) || !(_spectrum[i] > Threshold))
-                    continue;
-
-                maxV = _spectrum[i];
-                maxN = i; // maxN is the index of max
-            }
-            float freqN = maxN; // pass the index to a float variable
-            if (maxN > 0 && maxN < QSamples - 1)
-            { // interpolate index using neighbours
-                var dL = _spectrum[maxN - 1] / _spectrum[maxN];
-                var dR = _spectrum[maxN + 1] / _spectrum[maxN];
-                freqN += 0.5f * (dR * dR - dL * dL);
-            }
-
-            PitchValue = freqN * (AudioSettings.outputSampleRate / 2) / QSamples; // convert index to frequency
-
-            // we try to correct the PitchValue if the jump was too large
-            var variance = PitchValue / OldPitchValue;
-
-            if (/*DbValue != minDbValue && OldDbValue != minDbValue && */variance > 1.5)
-            {
-                for (i = 2; i < 10; i++)
+                // Check edges, consider them as having the missing sample as 'lower'
+                if (i == 0)
                 {
-                    var correctedVariance = PitchValue / (i * OldPitchValue);
-
-                    if (correctedVariance < 1 + acceptedChangeInPitch && correctedVariance > 1 - acceptedChangeInPitch)
+                    if (samplesAndIndices.Length > 1 && samplesAndIndices[i].value > samplesAndIndices[i + 1].value)
                     {
-                        PitchValue /= i;
-                        break;
+                        locals.Add(samplesAndIndices[i].index);
+                    }
+                }
+                else if (i == samplesAndIndices.Length - 1)
+                {
+                    if (samplesAndIndices.Length > 1 && samplesAndIndices[i].value > samplesAndIndices[i - 1].value)
+                    {
+                        locals.Add(samplesAndIndices[i].index);
+                    }
+                }
+                else
+                {
+                    // Normal case
+                    if (samplesAndIndices[i].value > samplesAndIndices[i - 1].value && samplesAndIndices[i].value > samplesAndIndices[i + 1].value)
+                    {
+                        locals.Add(samplesAndIndices[i].index);
                     }
                 }
             }
+
+            return locals.ToArray();
+        }
+
+        // TODO FIND A SOLUTION!
+        // https://stackoverflow.com/questions/445113/approximate-greatest-common-divisor
+        private int FindApproximateGCD(int[] sampleIndicies)
+        {
+            // Just debug print for now, and return the smallest number
+            Array.Sort(sampleIndicies);
+
+            for (int i = 0; i < sampleIndicies.Length; i++)
+            {
+                UnityEngine.Debug.Log(Time.frameCount + " no." + i + ", " + sampleIndicies[i]);
+            }
+
+            return sampleIndicies[0];
         }
     }
 }

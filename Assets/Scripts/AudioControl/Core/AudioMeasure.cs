@@ -112,6 +112,10 @@ namespace Assets.Scripts.AudioControl.Core
             {
                 sum += _samples[i] * _samples[i]; // sum squared samples
             }
+
+            // TODO Perhaps Should calculate Db & Rms by the following method:
+            // After calculating the GCD or the real tone, check the top important samples and only if they're close enough to being a multiple
+            // of that value, add their amplitutes. Ignore if they are anomalies
             RmsValue = Mathf.Sqrt(sum / QSamples); // rms = square root of average
             DbValue = 20 * Mathf.Log10(RmsValue / RefValue); // calculate dB
             if (DbValue < minDbValue) DbValue = minDbValue; // clamp it to -160dB min

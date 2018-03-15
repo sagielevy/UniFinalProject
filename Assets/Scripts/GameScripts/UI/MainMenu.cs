@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.GameScripts.UI
@@ -26,7 +27,9 @@ namespace Assets.Scripts.GameScripts.UI
 
         public void OnStartNewGame()
         {
-            // TODO load calibrate scene
+            PlayerPrefs.SetString(Helpers.playerPrefsKey, playerNameInput.text);
+            PlayerPrefs.Save();
+            SceneManager.LoadScene("Calibrate");
         }
     }
 }

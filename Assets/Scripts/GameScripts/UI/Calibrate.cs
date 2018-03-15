@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.GameScripts.UI
@@ -26,6 +27,7 @@ namespace Assets.Scripts.GameScripts.UI
         private const string SecondsLeftMsg = "Seconds left: {0}";
         private const string PressToBegin = "Press to begin";
         private const string PressNextStep = "Press to continue to the next step";
+        private const string Finish = "Calibrating complete!";
         private const int InitDelay = 3;
 
         public Text instructions;
@@ -37,11 +39,20 @@ namespace Assets.Scripts.GameScripts.UI
         private int secondsLeft;
         private bool hasBegun;
         private Dictionary<CalibrationStage, string> stageText;
+        private IEnumerator handleCalibration;
 
         private void Awake()
         {
             stageText = new Dictionary<CalibrationStage, string>();
-
+            stageText[CalibrationStage.Silence] = Silence;
+            stageText[CalibrationStage.Pause] = Pause;
+            stageText[CalibrationStage.PitchLow] = PitchLow;
+            stageText[CalibrationStage.PitchHigh] = PitchHigh;
+            stageText[CalibrationStage.Finished] = Finish;
+            stageText[CalibrationStage.PitchBaseLine] = PitchBaseline;
+            stageText[CalibrationStage.VolumeBaseLine] = VolumeBaseline;
+            stageText[CalibrationStage.VolumeMax] = VolumeMax;
+            stageText[CalibrationStage.VolumeMin] = VolumeMin;
         }
 
         private void Start()
@@ -52,6 +63,7 @@ namespace Assets.Scripts.GameScripts.UI
             buttonText.text = PressToBegin;
             hasBegun = false;
             calibrator = GetComponent<Calibration>();
+            handleCalibration = HandleCalibration();
         }
 
         public void BeginProcess()
@@ -65,21 +77,22 @@ namespace Assets.Scripts.GameScripts.UI
         {
             if (hasBegun)
             {
-                StartCoroutine(WaitAndStart());
+                StartCoroutine(handleCalibration);
             }
         }
 
-        IEnumerator WaitAndStart()
+        IEnumerator HandleCalibration()
         {
             secondsLeft = InitDelay;
             seconds.text = string.Format(SecondsLeftMsg, secondsLeft.ToString());
 
             // Wait and inform player
-            do
+            while (secondsLeft > 0)
             {
-                secondsLeft--;
                 yield return new WaitForSeconds(1);
-            } while (secondsLeft > 0);
+                secondsLeft--;
+                seconds.text = string.Format(SecondsLeftMsg, secondsLeft.ToString());
+            }
 
             // Start calibration process
             calibrator.StartCalibrating();
@@ -88,14 +101,28 @@ namespace Assets.Scripts.GameScripts.UI
 
             while (!calibrator.IsCalibrationComplete())
             {
+                var newStage = stageText[calibrator.GetCurrentStage()];
+
                 // Change text according to step
-                instructions.text = stageText[calibrator.GetCurrentStage()];
+                if (newStage != instructions.text)
+                {
+                    instructions.text = newStage;
+
+                    // Count down time somehow?
+                }
 
                 yield return null;
             }
 
-            // Save calibrated data to files. Set current user to player prefs
-            //Helpers.SaveFile()
+            // Save calibrated data to files for current player
+            var dataToSave = new Dictionary<string, OffsetsProfile>();
+            dataToSave[Helpers.volFileName] = calibrator.VolumeProfile;
+            dataToSave[Helpers.pitchFileName] = calibrator.PitchProfile;
+
+            Helpers.SaveFile(PlayerPrefs.GetString(Helpers.playerPrefsKey), dataToSave);
+
+            // Load the first level
+            SceneManager.LoadScene("Level 1");
         }
     }
 }

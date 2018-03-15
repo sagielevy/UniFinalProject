@@ -40,6 +40,7 @@ namespace Assets.Scripts.AudioControl
         private float stageStartingTime;
         private int numOfPrevSamples = 0;
         private bool calibrate;
+        private IEnumerator calibrateProcess;
 
         private const float sampleTimeOffset = 1.0f;
         private const float finishStageTime = 3.0f;
@@ -53,7 +54,8 @@ namespace Assets.Scripts.AudioControl
 
         public void StartCalibrating()
         {
-            stageStartingTime = Time.time;
+            calibrateProcess = Calibrate();
+            stageStartingTime = Time.fixedTime;
             calibrate = true;
         }
 
@@ -69,9 +71,9 @@ namespace Assets.Scripts.AudioControl
 
         private void FixedUpdate()
         {
-            if(calibrate)
+            if (calibrate)
             {
-                StartCoroutine(Calibrate());
+                StartCoroutine(calibrateProcess);
             }
         }
 
@@ -112,10 +114,10 @@ namespace Assets.Scripts.AudioControl
                     case CalibrationStage.Pause:
 
                         // Finised silence
-                        if (Time.time - stageStartingTime > pauseStageTime)
+                        if (Time.fixedTime - stageStartingTime > pauseStageTime)
                         {
                             currentStage = nextStage;
-                            stageStartingTime = Time.time;
+                            stageStartingTime = Time.fixedTime;
                         }
 
                         break;
@@ -134,7 +136,7 @@ namespace Assets.Scripts.AudioControl
         private void VolumeStage(ref float value, CalibrationStage next)
         {
             // Start sampling
-            if (Time.time - stageStartingTime > sampleTimeOffset)
+            if (Time.fixedTime - stageStartingTime > sampleTimeOffset)
             {
                 numOfPrevSamples++;
                 value = RollingAvrageVolume(value);
@@ -146,7 +148,7 @@ namespace Assets.Scripts.AudioControl
         private void PitchStage(ref float value, CalibrationStage next)
         {
             // Start sampling
-            if (Time.time - stageStartingTime > sampleTimeOffset)
+            if (Time.fixedTime - stageStartingTime > sampleTimeOffset)
             {
                 numOfPrevSamples++;
                 value = RollingAvragePitch(value);
@@ -169,12 +171,12 @@ namespace Assets.Scripts.AudioControl
 
         private void InitPauseIfFinished(CalibrationStage next)
         {
-            if (Time.time - stageStartingTime > finishStageTime)
+            if (Time.fixedTime - stageStartingTime > finishStageTime)
             {
                 currentStage = CalibrationStage.Pause;
                 nextStage = next;
                 numOfPrevSamples = 0;
-                stageStartingTime = Time.time;
+                stageStartingTime = Time.fixedTime;
             }
         }
     }

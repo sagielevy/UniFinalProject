@@ -73,19 +73,19 @@ namespace Assets.Scripts.AudioControl.Core
             }
         }
 
-        private void Awake()
-        {
-            if (instance == null)
-            {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                // Only instance lives
-                Destroy(this.gameObject);
-            }
-        }
+        //private void Awake()
+        //{
+        //    if (instance == null)
+        //    {
+        //        instance = this;
+        //        DontDestroyOnLoad(gameObject);
+        //    }
+        //    else
+        //    {
+        //        // Only instance lives
+        //        Destroy(this.gameObject);
+        //    }
+        //}
 
         void Start()
         {

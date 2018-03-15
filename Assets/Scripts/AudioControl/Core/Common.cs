@@ -8,6 +8,7 @@ namespace Assets.Scripts.AudioControl.Core
 {
     public class Common : MonoBehaviour
     {
+        // TODO Live throught difference scenes - static game object
         private void Awake()
         {
             // Make sure to allow program to work in BG

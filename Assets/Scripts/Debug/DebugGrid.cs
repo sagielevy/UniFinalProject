@@ -26,13 +26,14 @@ namespace Assets.Scripts
         private void Awake()
         {
             // DEBUG ONLY! REMOVE AFTERWARDS
-            PitchOffset = new Offsets(107, 550, 90, 0.01f);
+            PitchOffset = new Offsets(107, 175, 75, 0.01f);
+            DbOffset = new Offsets(-8, 5, -20, 0.01f);
         }
 
         private void Start()
         {
             PitchControl = new PitchControl(PitchOffset);
-            //DecibelControl = new DecibelControl(DbOffset);
+            DecibelControl = new DecibelControl(DbOffset);
             Hits = new SpriteRenderer[MaxNumOfMarks];
 
             GridWidth = GetComponent<SpriteRenderer>().sprite.bounds.size.x;
@@ -42,13 +43,14 @@ namespace Assets.Scripts
             Hits[HitIndex] = Instantiate(MarkHit);
             Hits[HitIndex].transform.parent = transform;
             Hits[HitIndex].gameObject.SetActive(true);
-            HitIndex++;
+            //HitIndex++;
         }
 
         private void FixedUpdate()
         {
-            float xPos = PitchControl.SoundForce(MicIn.PitchValue) * (GridWidth / 2);
-            //float yPos = DecibelControl.SoundForce(MicIn.DbValue) * (GridHeight / 2);
+            // Validate pitch by Db
+            float xPos = DecibelControl.isInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) * (GridWidth / 2) : PitchControl.NoData;
+            float yPos = DecibelControl.SoundForce(MicIn.DbValue) * (GridHeight / 2);
 
             // Init new hit
             if (Hits[HitIndex] == null)
@@ -60,26 +62,26 @@ namespace Assets.Scripts
 
             // Move hit relative to grid size
             Hits[HitIndex].transform.position = new Vector3(xPos,
-                                                     Hits[HitIndex].transform.position.y, 
+                                                     yPos, 
                                                      Hits[HitIndex].transform.position.z);
 
             // Cyclic growth
-            HitIndex = ++HitIndex % MaxNumOfMarks;
+            //HitIndex = ++HitIndex % MaxNumOfMarks;
 
             // Update colors for all hits
-            for (int i = 0; i < MaxNumOfMarks; i++)
-            {
-                if (Hits[i] != null)
-                {
-                    ChangeHitColor(i);
-                }
-            }
+            //for (int i = 0; i < MaxNumOfMarks; i++)
+            //{
+            //    if (Hits[i] != null)
+            //    {
+            //        ChangeHitColor(i);
+            //    }
+            //}
         }
 
-        private void ChangeHitColor(int currIndex)
-        {
-            int distFromHeadClamped = Mathf.Clamp((currIndex <= HitIndex) ? HitIndex - currIndex : MaxNumOfMarks - currIndex + HitIndex, 0, TailLength);
-            Hits[currIndex].color = Color.Lerp(Color.black, Color.white, distFromHeadClamped / TailLength);
-        }
+        //private void ChangeHitColor(int currIndex)
+        //{
+        //    int distFromHeadClamped = Mathf.Clamp((currIndex <= HitIndex) ? HitIndex - currIndex : MaxNumOfMarks - currIndex + HitIndex, 0, TailLength);
+        //    Hits[currIndex].color = Color.Lerp(Color.black, Color.white, distFromHeadClamped / TailLength);
+        //}
     }
 }

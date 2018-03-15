@@ -15,14 +15,22 @@ namespace Assets.Scripts.AudioControl
             PitchOffsets = offsets;
         }
 
+        public const float NoData = 0;
+
         public float SoundForce(float hertzSoundInput)
         {
             float melInput = Helpers.HertzToMel(hertzSoundInput);
 
-            // Outside range, return 0
-            if (melInput < PitchOffsets.MelMin || melInput > PitchOffsets.MelMax)
+            // Below range
+            if (melInput < PitchOffsets.MelMin)
             {
-                return 0;
+                return -1;
+            }
+
+            // Above range
+            if (melInput > PitchOffsets.MelMax)
+            {
+                return 1;
             }
 
             // Linear distance

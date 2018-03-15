@@ -11,34 +11,36 @@ namespace Assets.Scripts.Debug.PlotGraph
     public class _TestGraph : MonoBehaviour
     {
         public AudioMeasure MicIn;
-
+        
         private PitchControl PitchControl;
         private DecibelControl DecibelControl;
         private Offsets PitchOffset, DbOffset;
 
         private void Awake()
         {
+            // DEBUG ONLY! REMOVE AFTERWARDS
+            PitchOffset = new Offsets(107, 175, 75, 0.01f);
+            DbOffset = new Offsets(-8, 5, -20, 0.01f);
+            PitchControl = new PitchControl(PitchOffset);
+            DecibelControl = new DecibelControl(DbOffset);
         }
 
+        
         void Start()
         {
-            Graph.YMin = -5;
-            Graph.YMax = +2000;
+            Graph.YMin = -1;
+            Graph.YMax = +1;
 
             Graph.channel[0].isActive = true;
-            //Graph.channel[1].isActive = true;
+            Graph.channel[1].isActive = true;
         }
-
-
-        //void Update()
-        //{
-        //    Graph.channel[0].Feed(Mathf.Sin(Time.time));
-        //}
 
         void FixedUpdate()
         {
-            Graph.channel[0].Feed(Graph.YMax - MicIn.PitchValue); //Mathf.Sin(Time.time));
+            var melValRange = DecibelControl.isInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) : PitchControl.NoData;
+            var dbValRange = DecibelControl.SoundForce(MicIn.DbValue);
+            Graph.channel[0].Feed(Graph.YMax - melValRange);
+            Graph.channel[1].Feed(Graph.YMax - dbValRange);
         }
-
     }
 }

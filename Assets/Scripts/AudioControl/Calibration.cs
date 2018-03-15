@@ -39,11 +39,17 @@ namespace Assets.Scripts.AudioControl
         private CalibrationStage nextStage;
         private float stageStartingTime;
         private int numOfPrevSamples = 0;
+        private bool calibrate;
 
         private const float sampleTimeOffset = 1.0f;
         private const float finishStageTime = 3.0f;
         private const float pauseStageTime = 2.0f;
         private const float defaultBaselineThreshold = 0.01f;
+
+        public void StartCalibrating()
+        {
+            calibrate = true;
+        }
 
         private void Start()
         {
@@ -53,7 +59,10 @@ namespace Assets.Scripts.AudioControl
 
         private void FixedUpdate()
         {
-            StartCoroutine(Calibrate());
+            if(calibrate)
+            {
+                StartCoroutine(Calibrate());
+            }
         }
 
         private IEnumerator Calibrate()
@@ -102,6 +111,7 @@ namespace Assets.Scripts.AudioControl
                         break;
 
                     case CalibrationStage.Finished:
+                        calibrate = false;
                         volumeProfile = new OffsetsProfile(volumeBaseLineValue, volumeMaxValue, volumeMinValue, defaultBaselineThreshold);
                         pitchProfile = new OffsetsProfile(pitchBaseLineValue, pitchHighValue, pitchLowValue, defaultBaselineThreshold);
                         break;

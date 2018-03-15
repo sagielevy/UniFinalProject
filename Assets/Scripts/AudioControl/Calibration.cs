@@ -105,7 +105,6 @@ namespace Assets.Scripts.AudioControl
                         volumeProfile = new OffsetsProfile(volumeBaseLineValue, volumeMaxValue, volumeMinValue, defaultBaselineThreshold);
                         pitchProfile = new OffsetsProfile(pitchBaseLineValue, pitchHighValue, pitchLowValue, defaultBaselineThreshold);
                         break;
-
                 }
 
                 yield return null;

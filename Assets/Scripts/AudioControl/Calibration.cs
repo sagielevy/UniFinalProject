@@ -23,8 +23,8 @@ namespace Assets.Scripts.AudioControl
 
     public class Calibration : MonoBehaviour
     {
-        public OffsetsProfile volumeProfile;
-        public OffsetsProfile pitchProfile;
+        public OffsetsProfile VolumeProfile { get; private set; }
+        public OffsetsProfile PitchProfile { get; private set; }
         public AudioMeasure MicIn;
 
         private float silenceValue = 0;
@@ -59,7 +59,7 @@ namespace Assets.Scripts.AudioControl
 
         public bool IsCalibrationComplete()
         {
-            return volumeProfile != null && pitchProfile != null;
+            return VolumeProfile != null && PitchProfile != null;
         }
 
         private void Start()
@@ -122,8 +122,8 @@ namespace Assets.Scripts.AudioControl
 
                     case CalibrationStage.Finished:
                         calibrate = false;
-                        volumeProfile = new OffsetsProfile(volumeBaseLineValue, volumeMaxValue, volumeMinValue, defaultBaselineThreshold);
-                        pitchProfile = new OffsetsProfile(pitchBaseLineValue, pitchHighValue, pitchLowValue, defaultBaselineThreshold);
+                        VolumeProfile = new OffsetsProfile(volumeBaseLineValue, volumeMaxValue, volumeMinValue, defaultBaselineThreshold);
+                        PitchProfile = new OffsetsProfile(pitchBaseLineValue, pitchHighValue, pitchLowValue, defaultBaselineThreshold);
                         break;
                 }
 

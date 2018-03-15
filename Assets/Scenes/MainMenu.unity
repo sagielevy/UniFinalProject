@@ -1783,6 +1783,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNameInput: {fileID: 1120334929}
   StartNewGame: {fileID: 728949111}
+  ScrollViewContent: {fileID: 1696890589}
 --- !u!4 &2098367653
 Transform:
   m_ObjectHideFlags: 0

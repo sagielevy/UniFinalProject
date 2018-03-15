@@ -28,7 +28,7 @@ namespace Assets.Scripts.GameScripts.UI
         private const string PressToBegin = "Press to begin";
         private const string PressNextStep = "Press to continue to the next step";
         private const string Finish = "Calibrating complete!";
-        private const int InitDelay = 3;
+        private const int InitDelay = 5;
 
         public Text instructions;
         public Text seconds;
@@ -119,7 +119,11 @@ namespace Assets.Scripts.GameScripts.UI
             dataToSave[Helpers.volFileName] = calibrator.VolumeProfile;
             dataToSave[Helpers.pitchFileName] = calibrator.PitchProfile;
 
-            Helpers.SaveFile(PlayerPrefs.GetString(Helpers.playerPrefsKey), dataToSave);
+            Helpers.SavePlayerProfile(DataBetweenScenes.PlayerNameInput, dataToSave);
+
+            // Set as curr player and add to list
+            PlayerPrefs.SetString(Helpers.playerPrefsKey, DataBetweenScenes.PlayerNameInput);
+            PlayerPrefs.Save();
 
             // Load the first level
             SceneManager.LoadScene("Level 1");

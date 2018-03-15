@@ -135,6 +135,7 @@ namespace Assets.Scripts.AudioControl
 
         private void VolumeStage(ref float value, CalibrationStage next)
         {
+            // TODO sample a fixed number of times instead of using time?
             // Start sampling
             if (Time.fixedTime - stageStartingTime > sampleTimeOffset)
             {

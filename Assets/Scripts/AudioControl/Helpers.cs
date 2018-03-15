@@ -13,7 +13,8 @@ namespace Assets.Scripts.AudioControl
     {
         public readonly static string volFileName = "volume";
         public readonly static string pitchFileName = "pitch";
-        public readonly static string playerPrefsKey = "PlayerName";
+        public readonly static string playerPrefsKey = "CurrPlayerName";
+        public readonly static string playersListFile = "Players.dat";
         private readonly static string filenameFormat = "{0}_{1}.dat";
 
         /// <summary>
@@ -27,7 +28,79 @@ namespace Assets.Scripts.AudioControl
             return 2595 * Mathf.Log10(1 + hertz / 700);
         }
 
-        public static void SaveFile(string playerName, Dictionary<string, OffsetsProfile> playerProfiles)
+        private static void AddPlayerToList(string playerName)
+        {
+            PlayersList playersList = new PlayersList();
+            BinaryFormatter bf = new BinaryFormatter();
+            string destination = Application.persistentDataPath + Path.DirectorySeparatorChar + playersListFile;
+            FileStream file;
+
+            if (File.Exists(destination))
+            {
+                file = File.OpenRead(destination);
+
+                try
+                {
+                    playersList = (PlayersList)bf.Deserialize(file);
+                }
+                catch (Exception)
+                {
+                    playersList.players = new string[] { };
+                }
+            }
+            else
+            {
+                file = File.Create(destination);
+                playersList.players = new string[] { };
+            }
+
+            file.Close();
+
+            // Concat all players and save
+            playersList.players = playersList.players.Concat(new string[] { playerName }).ToArray();
+
+            if (File.Exists(destination))
+            {
+                // Overwrite file
+                file = File.Create(destination);
+            }
+
+            bf.Serialize(file, playersList);
+            file.Close();
+        }
+
+        public static string[] LoadPlayers()
+        {
+            PlayersList playersList = new PlayersList();
+            string destination = Application.persistentDataPath + Path.DirectorySeparatorChar + playersListFile;
+            FileStream file;
+
+            if (File.Exists(destination))
+            {
+                file = File.OpenRead(destination);
+
+                try
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    playersList = (PlayersList)bf.Deserialize(file);
+                }
+                catch (Exception)
+                {
+                    playersList.players = new string[] { };
+                }
+            }
+            else
+            {
+                file = File.Create(destination);
+                playersList.players = new string[] { };
+            }
+
+            file.Close();
+
+            return playersList.players;
+        }
+
+        public static void SavePlayerProfile(string playerName, Dictionary<string, OffsetsProfile> playerProfiles)
         {
             string destinationVol = Application.persistentDataPath + Path.DirectorySeparatorChar + string.Format(filenameFormat, playerName, volFileName);
             string destinationPitch = Application.persistentDataPath + Path.DirectorySeparatorChar + string.Format(filenameFormat, playerName, pitchFileName);
@@ -54,10 +127,14 @@ namespace Assets.Scripts.AudioControl
             BinaryFormatter bf = new BinaryFormatter();
             bf.Serialize(fileVolume, playerProfiles[volFileName]);
             bf.Serialize(filePitch, playerProfiles[pitchFileName]);
+
+            // Add player to list
+            AddPlayerToList(playerName);
+
             fileVolume.Close();
         }
 
-        public static Dictionary<string, OffsetsProfile> LoadFile(string playerName)
+        public static Dictionary<string, OffsetsProfile> LoadPlayerProfile(string playerName)
         {
             var playerProfiles = new Dictionary<string, OffsetsProfile>();
 
@@ -92,11 +169,13 @@ namespace Assets.Scripts.AudioControl
             fileVolume.Close();
             filePitch.Close();
             
-            //UnityEngine.Debug.Log(data.name);
-            //UnityEngine.Debug.Log(data.score);
-            //UnityEngine.Debug.Log(data.timePlayed);
-
             return playerProfiles;
         }
+    }
+
+    [Serializable]
+    class PlayersList
+    {
+        public string[] players;
     }
 }

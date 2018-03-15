@@ -15,7 +15,7 @@ namespace Assets.Scripts
         public int MaxNumOfMarks = 1000;
         public int TailLength = 100;
 
-        private Offsets PitchOffset, DbOffset;
+        private OffsetsProfile PitchOffset, DbOffset;
         private PitchControl PitchControl;
         private DecibelControl DecibelControl;
 
@@ -26,8 +26,8 @@ namespace Assets.Scripts
         private void Awake()
         {
             // DEBUG ONLY! REMOVE AFTERWARDS
-            PitchOffset = new Offsets(107, 175, 75, 0.01f);
-            DbOffset = new Offsets(-8, 5, -20, 0.01f);
+            PitchOffset = new OffsetsProfile(107, 175, 75, 0.01f);
+            DbOffset = new OffsetsProfile(-8, 5, -20, 0.01f);
         }
 
         private void Start()

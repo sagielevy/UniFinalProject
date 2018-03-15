@@ -8,9 +8,9 @@ namespace Assets.Scripts.AudioControl
 {
     public class PitchControl : ISoundControl
     {
-        Offsets PitchOffsets;
+        OffsetsProfile PitchOffsets;
 
-        public PitchControl(Offsets offsets)
+        public PitchControl(OffsetsProfile offsets)
         {
             PitchOffsets = offsets;
         }

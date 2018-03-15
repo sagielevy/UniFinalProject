@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace Assets.Scripts.AudioControl
 {
-    public class Offsets
+    [Serializable]
+    public class OffsetsProfile
     {
         public float Baseline { get; private set; }
         public float Max { get; private set; }
@@ -21,7 +22,7 @@ namespace Assets.Scripts.AudioControl
 
         // Assumes inputs are valid. That is, 
         // max > baseline > min and 0 < baselineThreshold < 1
-        public Offsets(float baseline, float max, float min, float baselineThreshold)
+        public OffsetsProfile(float baseline, float max, float min, float baselineThreshold)
         {
             Baseline = baseline;
             Max = max;

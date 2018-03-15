@@ -8,9 +8,9 @@ namespace Assets.Scripts.AudioControl
 {
     public class DecibelControl : ISoundControl
     {
-        Offsets decibelOffsets;
+        OffsetsProfile decibelOffsets;
 
-        public DecibelControl(Offsets offsets)
+        public DecibelControl(OffsetsProfile offsets)
         {
             decibelOffsets = offsets;
         }

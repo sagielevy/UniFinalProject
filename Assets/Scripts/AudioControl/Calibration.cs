@@ -46,10 +46,20 @@ namespace Assets.Scripts.AudioControl
         private const float pauseStageTime = 2.0f;
         private const float defaultBaselineThreshold = 0.01f;
 
+        public CalibrationStage GetCurrentStage()
+        {
+            return currentStage;
+        }
+
         public void StartCalibrating()
         {
             stageStartingTime = Time.time;
             calibrate = true;
+        }
+
+        public bool IsCalibrationComplete()
+        {
+            return volumeProfile != null && pitchProfile != null;
         }
 
         private void Start()

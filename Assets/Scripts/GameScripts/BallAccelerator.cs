@@ -14,15 +14,15 @@ namespace Assets.Scripts.GameScripts
         public AudioMeasure MicIn;
         public float forceScale = 1.0f;
         public float maxVelocity = 6.0f;
-        private Rigidbody rigidbody;
+        private Rigidbody body;
         private OffsetsProfile PitchOffset, DbOffset;
         private PitchControl PitchControl;
         private DecibelControl DecibelControl;
 
         private void Start()
         {
-            rigidbody = GetComponent<Rigidbody>();
-            rigidbody.maxAngularVelocity = maxVelocity;
+            body = GetComponent<Rigidbody>();
+            body.maxAngularVelocity = maxVelocity;
 
             // DEBUG ONLY! REMOVE AFTERWARDS - GET DATA FROM CALLIBRATOR
             PitchOffset = new OffsetsProfile(107, 175, 75, 0.01f);
@@ -36,7 +36,7 @@ namespace Assets.Scripts.GameScripts
             float xAcc = DecibelControl.isInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) : PitchControl.NoData;
             float zAcc = DecibelControl.SoundForce(MicIn.DbValue);
 
-            rigidbody.AddForce(new Vector3(xAcc * forceScale, 0, zAcc * forceScale));
+            body.AddForce(new Vector3(xAcc * forceScale, 0, zAcc * forceScale));
         }
     }
 }

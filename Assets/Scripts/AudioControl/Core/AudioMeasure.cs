@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.AudioControl.Core
 {
+    /// <summary>
+    /// Singleton class responsible for receiving and analyzing sound input from the player
+    /// </summary>
     public class AudioMeasure : MonoBehaviour
     {
         public float RmsValue { get; private set; }
@@ -16,6 +19,7 @@ namespace Assets.Scripts.AudioControl.Core
         private float OldPitchValue { get; set; }
         private float OldDbValue { get; set; }
 
+        private static AudioMeasure instance;
         private AudioSource Audio;
         private string audioInputDevice;
         private const int samplerate = 44100;
@@ -28,7 +32,6 @@ namespace Assets.Scripts.AudioControl.Core
 
         float[] _samples;
         private float[] _spectrum;
-        private float _fSample;
 
         private struct ValueAndIndex : IComparable<ValueAndIndex>
         {
@@ -70,6 +73,20 @@ namespace Assets.Scripts.AudioControl.Core
             }
         }
 
+        private void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                // Only instance lives
+                Destroy(this.gameObject);
+            }
+        }
+
         void Start()
         {
             AudioSettings.Reset(new AudioConfiguration
@@ -79,7 +96,6 @@ namespace Assets.Scripts.AudioControl.Core
 
             _samples = new float[QSamples];
             _spectrum = new float[QSamples];
-            _fSample = AudioSettings.outputSampleRate;
 
             Audio = GetComponent<AudioSource>();
 

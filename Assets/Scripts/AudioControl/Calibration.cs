@@ -63,31 +63,31 @@ namespace Assets.Scripts.AudioControl
                 switch (currentStage)
                 {
                     case CalibrationStage.Silence:
-                        VolumeStage(ref silenceValue);
+                        VolumeStage(ref silenceValue, CalibrationStage.VolumeBaseLine);
                         break;
 
                     case CalibrationStage.VolumeBaseLine:
-                        VolumeStage(ref volumeBaseLineValue);
+                        VolumeStage(ref volumeBaseLineValue, CalibrationStage.VolumeMin);
                         break;
 
                     case CalibrationStage.VolumeMin:
-                        VolumeStage(ref volumeMinValue);
+                        VolumeStage(ref volumeMinValue, CalibrationStage.VolumeMax);
                         break;
 
                     case CalibrationStage.VolumeMax:
-                        VolumeStage(ref volumeMaxValue);
+                        VolumeStage(ref volumeMaxValue, CalibrationStage.PitchBaseLine);
                         break;
 
                     case CalibrationStage.PitchBaseLine:
-                        PitchStage(ref pitchBaseLineValue);
+                        PitchStage(ref pitchBaseLineValue, CalibrationStage.PitchLow);
                         break;
 
                     case CalibrationStage.PitchLow:
-                        PitchStage(ref pitchLowValue);
+                        PitchStage(ref pitchLowValue, CalibrationStage.PitchHigh);
                         break;
 
                     case CalibrationStage.PitchHigh:
-                        PitchStage(ref pitchHighValue);
+                        PitchStage(ref pitchHighValue, CalibrationStage.Finished);
                         break;
 
                     case CalibrationStage.Pause:
@@ -112,7 +112,7 @@ namespace Assets.Scripts.AudioControl
             }
         }
 
-        private void VolumeStage(ref float value)
+        private void VolumeStage(ref float value, CalibrationStage next)
         {
             // Start sampling
             if (Time.time - stageStartingTime > sampleTimeOffset)
@@ -121,10 +121,10 @@ namespace Assets.Scripts.AudioControl
                 value = RollingAvrageVolume(value);
             }
 
-            InitPauseIfFinished();
+            InitPauseIfFinished(next);
         }
 
-        private void PitchStage(ref float value)
+        private void PitchStage(ref float value, CalibrationStage next)
         {
             // Start sampling
             if (Time.time - stageStartingTime > sampleTimeOffset)
@@ -133,7 +133,7 @@ namespace Assets.Scripts.AudioControl
                 value = RollingAvragePitch(value);
             }
 
-            InitPauseIfFinished();
+            InitPauseIfFinished(next);
         }
 
         private float RollingAvrageVolume(float prevValue)
@@ -148,37 +148,14 @@ namespace Assets.Scripts.AudioControl
             return prevValue + (MicIn.MelValue / numOfPrevSamples);
         }
 
-        private void InitPauseIfFinished()
+        private void InitPauseIfFinished(CalibrationStage next)
         {
             if (Time.time - stageStartingTime > finishStageTime)
             {
                 currentStage = CalibrationStage.Pause;
-                nextStage = GetNextStage();
+                nextStage = next;
                 numOfPrevSamples = 0;
                 stageStartingTime = Time.time;
-            }
-        }
-
-        private CalibrationStage GetNextStage()
-        {
-            switch (currentStage)
-            {
-                case CalibrationStage.Silence:
-                    return CalibrationStage.VolumeBaseLine;
-                case CalibrationStage.VolumeBaseLine:
-                    return CalibrationStage.VolumeMin;
-                case CalibrationStage.VolumeMin:
-                    return CalibrationStage.VolumeMax;
-                case CalibrationStage.VolumeMax:
-                    return CalibrationStage.PitchBaseLine;
-                case CalibrationStage.PitchBaseLine:
-                    return CalibrationStage.PitchLow;
-                case CalibrationStage.PitchLow:
-                    return CalibrationStage.PitchHigh;
-                case CalibrationStage.PitchHigh:
-                    return CalibrationStage.Finished;
-                default:
-                    return CalibrationStage.Finished;
             }
         }
     }

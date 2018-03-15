@@ -19,7 +19,7 @@ namespace Assets.Scripts.Debug.PlotGraph
         private void Awake()
         {
             // DEBUG ONLY! REMOVE AFTERWARDS
-            PitchOffset = new OffsetsProfile(107, 175, 75, 0.01f);
+            PitchOffset = new OffsetsProfile(130, 175, 75, 0.01f);
             DbOffset = new OffsetsProfile(-8, 5, -20, 0.01f);
             PitchControl = new PitchControl(PitchOffset);
             DecibelControl = new DecibelControl(DbOffset);

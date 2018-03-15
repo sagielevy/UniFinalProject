@@ -11,9 +11,10 @@ namespace Assets.Scripts.AudioControl
 {
     static class Helpers
     {
-        public static string volFileName = "volume";
-        public static string pitchFileName = "pitch";
-        private static string filenameFormat = "{0}_{1}.dat";
+        public readonly static string volFileName = "volume";
+        public readonly static string pitchFileName = "pitch";
+        public readonly static string playerPrefsKey = "PlayerName";
+        private readonly static string filenameFormat = "{0}_{1}.dat";
 
         /// <summary>
         /// Convert via the following popular formula:
@@ -86,7 +87,6 @@ namespace Assets.Scripts.AudioControl
             }
 
             BinaryFormatter bf = new BinaryFormatter();
-            //GameData data = (GameData)bf.Deserialize(file);
             playerProfiles[volFileName] = (OffsetsProfile)bf.Deserialize(fileVolume);
             playerProfiles[pitchFileName] = (OffsetsProfile)bf.Deserialize(filePitch);
             fileVolume.Close();

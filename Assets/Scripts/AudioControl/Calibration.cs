@@ -48,13 +48,13 @@ namespace Assets.Scripts.AudioControl
 
         public void StartCalibrating()
         {
+            stageStartingTime = Time.time;
             calibrate = true;
         }
 
         private void Start()
         {
             currentStage = CalibrationStage.Silence;
-            stageStartingTime = Time.time;
         }
 
         private void FixedUpdate()

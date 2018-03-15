@@ -17,12 +17,14 @@ namespace Assets.Scripts.AudioControl
         PitchBaseLine,
         PitchLow,
         PitchHigh,
-        Pause
+        Pause,
+        Finished
     }
 
     public class Calibration : MonoBehaviour
     {
-        public OffsetsProfile profile;
+        public OffsetsProfile volumeProfile;
+        public OffsetsProfile pitchProfile;
         public AudioMeasure MicIn;
 
         private float silenceValue = 0;
@@ -41,6 +43,7 @@ namespace Assets.Scripts.AudioControl
         private const float sampleTimeOffset = 1.0f;
         private const float finishStageTime = 3.0f;
         private const float pauseStageTime = 2.0f;
+        private const float defaultBaselineThreshold = 0.01f;
 
         private void Start()
         {
@@ -53,71 +56,129 @@ namespace Assets.Scripts.AudioControl
             StartCoroutine(Calibrate());
         }
 
+        private IEnumerator Calibrate()
+        {
+            while(true)
+            {
+                switch (currentStage)
+                {
+                    case CalibrationStage.Silence:
+                        VolumeStage(ref silenceValue);
+                        break;
 
-        private float rollingAvrageVolume(float prevValue)
+                    case CalibrationStage.VolumeBaseLine:
+                        VolumeStage(ref volumeBaseLineValue);
+                        break;
+
+                    case CalibrationStage.VolumeMin:
+                        VolumeStage(ref volumeMinValue);
+                        break;
+
+                    case CalibrationStage.VolumeMax:
+                        VolumeStage(ref volumeMaxValue);
+                        break;
+
+                    case CalibrationStage.PitchBaseLine:
+                        PitchStage(ref pitchBaseLineValue);
+                        break;
+
+                    case CalibrationStage.PitchLow:
+                        PitchStage(ref pitchLowValue);
+                        break;
+
+                    case CalibrationStage.PitchHigh:
+                        PitchStage(ref pitchHighValue);
+                        break;
+
+                    case CalibrationStage.Pause:
+
+                        // Finised silence
+                        if (Time.time - stageStartingTime > pauseStageTime)
+                        {
+                            currentStage = nextStage;
+                            stageStartingTime = Time.time;
+                        }
+
+                        break;
+
+                    case CalibrationStage.Finished:
+                        volumeProfile = new OffsetsProfile(volumeBaseLineValue, volumeMaxValue, volumeMinValue, defaultBaselineThreshold);
+                        pitchProfile = new OffsetsProfile(pitchBaseLineValue, pitchHighValue, pitchLowValue, defaultBaselineThreshold);
+                        break;
+
+                }
+
+                yield return null;
+            }
+        }
+
+        private void VolumeStage(ref float value)
+        {
+            // Start sampling
+            if (Time.time - stageStartingTime > sampleTimeOffset)
+            {
+                numOfPrevSamples++;
+                value = RollingAvrageVolume(value);
+            }
+
+            InitPauseIfFinished();
+        }
+
+        private void PitchStage(ref float value)
+        {
+            // Start sampling
+            if (Time.time - stageStartingTime > sampleTimeOffset)
+            {
+                numOfPrevSamples++;
+                value = RollingAvragePitch(value);
+            }
+
+            InitPauseIfFinished();
+        }
+
+        private float RollingAvrageVolume(float prevValue)
         {
             prevValue = (prevValue * (numOfPrevSamples - 1)) / numOfPrevSamples;
-            // weight of current sample is 1/numOfPrefSamples
             return prevValue + (MicIn.DbValue / numOfPrevSamples);
         }
-        IEnumerator Calibrate()
+
+        private float RollingAvragePitch(float prevValue)
+        {
+            prevValue = (prevValue * (numOfPrevSamples - 1)) / numOfPrevSamples;
+            return prevValue + (MicIn.MelValue / numOfPrevSamples);
+        }
+
+        private void InitPauseIfFinished()
+        {
+            if (Time.time - stageStartingTime > finishStageTime)
+            {
+                currentStage = CalibrationStage.Pause;
+                nextStage = GetNextStage();
+                numOfPrevSamples = 0;
+                stageStartingTime = Time.time;
+            }
+        }
+
+        private CalibrationStage GetNextStage()
         {
             switch (currentStage)
             {
                 case CalibrationStage.Silence:
-                    
-                    // Start sampling
-                    if(Time.time - stageStartingTime > sampleTimeOffset)
-                    {
-                        numOfPrevSamples++;
-                        silenceValue = rollingAvrageVolume(silenceValue);
-                    }
-
-                    // Finised silence
-                    if (Time.time - stageStartingTime > finishStageTime)
-                    {
-                        currentStage = CalibrationStage.Pause;
-                        nextStage = CalibrationStage.VolumeBaseLine;
-                        numOfPrevSamples = 0;
-                        stageStartingTime = Time.time;
-                    }
-
-                    yield return null;
-                    break;
-
+                    return CalibrationStage.VolumeBaseLine;
                 case CalibrationStage.VolumeBaseLine:
-
-                    // Start sampling
-                    if (Time.time - stageStartingTime > sampleTimeOffset)
-                    {
-                        numOfPrevSamples++;
-                        volumeBaseLineValue = rollingAvrageVolume(volumeBaseLineValue);
-                    }
-
-                    // Finised silence
-                    if (Time.time - stageStartingTime > finishStageTime)
-                    {
-                        currentStage = CalibrationStage.Pause;
-                        nextStage = CalibrationStage.VolumeBaseLine;
-                        numOfPrevSamples = 0;
-                        stageStartingTime = Time.time;
-                    }
-
-                    yield return null;
-                    break;
-
-                case CalibrationStage.Pause:
-
-                    // Finised silence
-                    if (Time.time - stageStartingTime > pauseStageTime)
-                    {
-                        currentStage = nextStage;
-                        stageStartingTime = Time.time;
-                    }
-
-                    yield return null;
-                    break;
-
+                    return CalibrationStage.VolumeMin;
+                case CalibrationStage.VolumeMin:
+                    return CalibrationStage.VolumeMax;
+                case CalibrationStage.VolumeMax:
+                    return CalibrationStage.PitchBaseLine;
+                case CalibrationStage.PitchBaseLine:
+                    return CalibrationStage.PitchLow;
+                case CalibrationStage.PitchLow:
+                    return CalibrationStage.PitchHigh;
+                case CalibrationStage.PitchHigh:
+                    return CalibrationStage.Finished;
+                default:
+                    return CalibrationStage.Finished;
             }
         }
     }

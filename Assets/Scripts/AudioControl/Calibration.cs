@@ -64,14 +64,6 @@ namespace Assets.Scripts.AudioControl
             return result;
         }
 
-        public void StartCalibrating()
-        {
-            calibrateProcess = Calibrate();
-            stageStartingTime = Time.fixedTime;
-            continueProcess = true;
-            inputStageInvalid = false;
-        }
-
         public void ContinueCalibrating()
         {
             continueProcess = true;
@@ -83,9 +75,23 @@ namespace Assets.Scripts.AudioControl
             return VolumeProfile != null && PitchProfile != null;
         }
 
+        public void RestartCalibrationProcess()
+        {
+            if (calibrateProcess != null)
+            {
+                StopCoroutine(calibrateProcess);
+            }
+
+            calibrateProcess = Calibrate();
+            currentStage = CalibrationStage.Silence;
+            inputStageInvalid = false;
+            continueProcess = false;
+            numOfPrevSamples = 0;
+        }
+
         private void Start()
         {
-            currentStage = CalibrationStage.Silence;
+            RestartCalibrationProcess();
         }
 
         private void FixedUpdate()

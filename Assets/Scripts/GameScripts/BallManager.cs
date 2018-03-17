@@ -56,8 +56,6 @@ namespace Assets.Scripts.GameScripts
 
         private void LevelRestart()
         {
-            // TODO fade out/in too
-
             // Reset ball position and velocity
             body.position = initialPosition;
             body.velocity = Vector3.zero;

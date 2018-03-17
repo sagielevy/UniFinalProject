@@ -30,7 +30,7 @@ namespace Assets.Scripts.GameScripts.UI
         private const string PressDisabled = "Step processing...";
         private const string Finish = "Calibrating complete!";
         private const string ErrorBadInput = "Bad input while calibrating... Please try again.\nPay close attention to the instructions and try avoiding noisy areas";
-        private const int InitDelay = 3;
+        //private const int InitDelay = 3;
 
         public Text instructions;
         public Text ErrorMsg;
@@ -38,7 +38,7 @@ namespace Assets.Scripts.GameScripts.UI
         private Text buttonText;
         private Calibration calibrator;
 
-        private int secondsLeft;
+        //private int secondsLeft;
         private bool hasBegun;
         private Dictionary<CalibrationStage, string> stageText;
         private IEnumerator handleCalibration;
@@ -69,19 +69,25 @@ namespace Assets.Scripts.GameScripts.UI
         }
 
         public void BeginProcess()
-        {// TODO handle the first press differently - dont jump straight to the first step, give another click request or something
-            hasBegun = true;
-            buttonText.text = PressDisabled;
+        {
+            // Change to first step
+            buttonText.text = PressStartStep;
+            instructions.text = stageText[calibrator.GetCurrentStage()];
             nextStageBtn.onClick.RemoveAllListeners();
             nextStageBtn.onClick.AddListener(() => { ContinueProcess(); });
-            nextStageBtn.interactable = false;
         }
 
         public void ContinueProcess()
         {
+            hasBegun = true;
             calibrator.ContinueCalibrating();
             nextStageBtn.interactable = false;
             buttonText.text = PressDisabled;
+        }
+
+        public void RestartCalibrationUI()
+        {
+            calibrator.RestartCalibrationProcess();
         }
 
         private void FixedUpdate()
@@ -94,22 +100,6 @@ namespace Assets.Scripts.GameScripts.UI
 
         IEnumerator HandleCalibration()
         {
-            //secondsLeft = InitDelay;
-            //seconds.text = string.Format(SecondsLeftMsg, secondsLeft.ToString());
-
-            // Wait and inform player
-            //while (secondsLeft > 0)
-            //{
-            //    yield return new WaitForSeconds(1);
-            //    secondsLeft--;
-            //    seconds.text = string.Format(SecondsLeftMsg, secondsLeft.ToString());
-            //}
-
-            // Start calibration process
-            calibrator.StartCalibrating();
-
-            yield return null;
-
             while (!calibrator.IsCalibrationComplete())
             {
                 var newStage = stageText[calibrator.GetCurrentStage()];

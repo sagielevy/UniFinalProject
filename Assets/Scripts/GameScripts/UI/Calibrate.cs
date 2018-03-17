@@ -29,10 +29,11 @@ namespace Assets.Scripts.GameScripts.UI
         private const string PressStartStep = "Press to start this step";
         private const string PressDisabled = "Step processing...";
         private const string Finish = "Calibrating complete!";
+        private const string ErrorBadInput = "Bad input while calibrating... Please try again.\nPay close attention to the instructions and try avoiding noisy areas";
         private const int InitDelay = 3;
 
         public Text instructions;
-        public Text seconds;
+        public Text ErrorMsg;
         public Button nextStageBtn;
         private Text buttonText;
         private Calibration calibrator;
@@ -59,7 +60,7 @@ namespace Assets.Scripts.GameScripts.UI
         private void Start()
         {
             instructions.text = Welcome;
-            seconds.text = "";
+            ErrorMsg.text = "";
             buttonText = nextStageBtn.GetComponentInChildren<Text>();
             buttonText.text = PressToBegin;
             hasBegun = false;
@@ -93,16 +94,16 @@ namespace Assets.Scripts.GameScripts.UI
 
         IEnumerator HandleCalibration()
         {
-            secondsLeft = InitDelay;
-            seconds.text = string.Format(SecondsLeftMsg, secondsLeft.ToString());
+            //secondsLeft = InitDelay;
+            //seconds.text = string.Format(SecondsLeftMsg, secondsLeft.ToString());
 
             // Wait and inform player
-            while (secondsLeft > 0)
-            {
-                yield return new WaitForSeconds(1);
-                secondsLeft--;
-                seconds.text = string.Format(SecondsLeftMsg, secondsLeft.ToString());
-            }
+            //while (secondsLeft > 0)
+            //{
+            //    yield return new WaitForSeconds(1);
+            //    secondsLeft--;
+            //    seconds.text = string.Format(SecondsLeftMsg, secondsLeft.ToString());
+            //}
 
             // Start calibration process
             calibrator.StartCalibrating();
@@ -112,16 +113,26 @@ namespace Assets.Scripts.GameScripts.UI
             while (!calibrator.IsCalibrationComplete())
             {
                 var newStage = stageText[calibrator.GetCurrentStage()];
+                bool inputError = false;
 
                 // Stage change
-                if (newStage != instructions.text)
+                if (newStage != instructions.text || (inputError = calibrator.IsInputStageInvalid()))
                 {
                     // Change text according to step
                     instructions.text = newStage;
 
+                    // Clear error message if exists
+                    ErrorMsg.text = "";
+
                     // Enable button for the player to continue
                     nextStageBtn.interactable = true;
                     buttonText.text = PressStartStep;
+
+                    // There was a bad input previously show error message
+                    if (inputError)
+                    {
+                        ErrorMsg.text = ErrorBadInput;
+                    }
                 }
 
                 yield return null;

@@ -9,11 +9,13 @@ using UnityEngine;
 namespace Assets.Scripts.GameScripts
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class BallAccelerator : MonoBehaviour
+    public class BallManager : MonoBehaviour
     {
         public AudioMeasure MicIn;
         public float forceScale = 1.0f;
         public float maxVelocity = 6.0f;
+        public float levelFloorY = -10; // The "ground". The level should reset if the ball has reached this "plane"
+        public Vector3 initialPosition;
         private Rigidbody body;
         private OffsetsProfile PitchOffset, DbOffset;
         private PitchControl PitchControl;
@@ -39,10 +41,27 @@ namespace Assets.Scripts.GameScripts
 
         public void FixedUpdate()
         {
-            float xAcc = DecibelControl.isInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) : PitchControl.NoData;
+            // Move ball!
+            float xAcc = DecibelControl.IsInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) : PitchControl.NoData;
             float zAcc = DecibelControl.SoundForce(MicIn.DbValue);
 
             body.AddForce(new Vector3(xAcc * forceScale, 0, zAcc * forceScale));
+
+            // Check if to reset level
+            if (transform.position.y < levelFloorY)
+            {
+                LevelRestart();
+            }
+        }
+
+        private void LevelRestart()
+        {
+            // TODO fade out/in too
+
+            // Reset ball position and velocity
+            body.position = initialPosition;
+            body.velocity = Vector3.zero;
+            body.angularVelocity = Vector3.zero;
         }
     }
 }

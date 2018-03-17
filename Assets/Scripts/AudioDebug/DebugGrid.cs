@@ -49,7 +49,7 @@ namespace Assets.Scripts.AudioDebug
         private void FixedUpdate()
         {
             // Validate pitch by Db
-            float xPos = DecibelControl.isInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) * (GridWidth / 2) : PitchControl.NoData;
+            float xPos = DecibelControl.IsInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) * (GridWidth / 2) : PitchControl.NoData;
             float yPos = DecibelControl.SoundForce(MicIn.DbValue) * (GridHeight / 2);
 
             // Init new hit

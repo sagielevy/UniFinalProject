@@ -36,12 +36,15 @@ namespace Assets.Scripts.AudioControl
         private float pitchHighValue = 0;
 
         private CalibrationStage currentStage;
-        //private CalibrationStage nextStage;
         private float stageStartingTime;
         private int numOfPrevSamples = 0;
         private bool continueProcess;
+        private bool inputStageInvalid;
         private IEnumerator calibrateProcess;
 
+        // TODO verify these distances!
+        private const float minVolumeDist = 6;
+        private const float minPitchDist = 20;
         private const float sampleTimeOffset = 3.0f;
         private const float finishStageTime = 3.0f;
         //private const float pauseStageTime = 2.0f;
@@ -52,11 +55,21 @@ namespace Assets.Scripts.AudioControl
             return currentStage;
         }
 
+        public bool IsInputStageInvalid()
+        {
+            // Reset flag
+            var result = inputStageInvalid;
+            inputStageInvalid = false;
+
+            return result;
+        }
+
         public void StartCalibrating()
         {
             calibrateProcess = Calibrate();
             stageStartingTime = Time.fixedTime;
             continueProcess = true;
+            inputStageInvalid = false;
         }
 
         public void ContinueCalibrating()
@@ -90,31 +103,38 @@ namespace Assets.Scripts.AudioControl
                 switch (currentStage)
                 {
                     case CalibrationStage.Silence:
-                        VolumeStage(ref silenceValue, CalibrationStage.VolumeBaseLine);
+                        VolumeStage(ref silenceValue);
+                        InitPauseIfFinished(CalibrationStage.VolumeBaseLine);
                         break;
 
                     case CalibrationStage.VolumeBaseLine:
-                        VolumeStage(ref volumeBaseLineValue, CalibrationStage.VolumeMin);
+                        VolumeStage(ref volumeBaseLineValue);
+                        InitPauseIfFinished(CalibrationStage.VolumeMin);
                         break;
 
                     case CalibrationStage.VolumeMin:
-                        VolumeStage(ref volumeMinValue, CalibrationStage.VolumeMax);
+                        VolumeStage(ref volumeMinValue);
+                        InitPauseIfFinished(CalibrationStage.VolumeMax, volumeBaseLineValue - volumeMinValue, minVolumeDist);
                         break;
 
                     case CalibrationStage.VolumeMax:
-                        VolumeStage(ref volumeMaxValue, CalibrationStage.PitchBaseLine);
+                        VolumeStage(ref volumeMaxValue);
+                        InitPauseIfFinished(CalibrationStage.PitchBaseLine, volumeMaxValue - volumeBaseLineValue, minVolumeDist);
                         break;
 
                     case CalibrationStage.PitchBaseLine:
-                        PitchStage(ref pitchBaseLineValue, CalibrationStage.PitchLow);
+                        PitchStage(ref pitchBaseLineValue);
+                        InitPauseIfFinished(CalibrationStage.PitchLow);
                         break;
 
                     case CalibrationStage.PitchLow:
-                        PitchStage(ref pitchLowValue, CalibrationStage.PitchHigh);
+                        PitchStage(ref pitchLowValue);
+                        InitPauseIfFinished(CalibrationStage.PitchHigh, pitchBaseLineValue - pitchLowValue, minPitchDist);
                         break;
 
                     case CalibrationStage.PitchHigh:
-                        PitchStage(ref pitchHighValue, CalibrationStage.Finished);
+                        PitchStage(ref pitchHighValue);
+                        InitPauseIfFinished(CalibrationStage.Finished, pitchHighValue - pitchBaseLineValue, minPitchDist);
                         break;
 
                     case CalibrationStage.Pause:
@@ -138,7 +158,7 @@ namespace Assets.Scripts.AudioControl
             }
         }
 
-        private void VolumeStage(ref float value, CalibrationStage next)
+        private void VolumeStage(ref float value)
         {
             // Start sampling
             if (Time.fixedTime - stageStartingTime < sampleTimeOffset)
@@ -146,11 +166,9 @@ namespace Assets.Scripts.AudioControl
                 numOfPrevSamples++;
                 value = RollingAverageVolume(value);
             }
-
-            InitPauseIfFinished(next);
         }
 
-        private void PitchStage(ref float value, CalibrationStage next)
+        private void PitchStage(ref float value)
         {
             // Start sampling
             if (Time.fixedTime - stageStartingTime < sampleTimeOffset)
@@ -158,8 +176,6 @@ namespace Assets.Scripts.AudioControl
                 numOfPrevSamples++;
                 value = RollingAveragePitch(value);
             }
-
-            InitPauseIfFinished(next);
         }
 
         private float RollingAverageVolume(float prevValue)
@@ -176,14 +192,26 @@ namespace Assets.Scripts.AudioControl
 
         private void InitPauseIfFinished(CalibrationStage next)
         {
+            // Will always validate as true
+            InitPauseIfFinished(next, 0, 0);
+        }
+
+        private void InitPauseIfFinished(CalibrationStage next, float valueBaselineDist, float minDistance)
+        {
             if (Time.fixedTime - stageStartingTime > finishStageTime)
             {
-                UnityEngine.Debug.Log("numOfPrevSamples: " + numOfPrevSamples);
-                //currentStage = CalibrationStage.Pause;
-                //nextStage = next;
-                currentStage = next;
                 numOfPrevSamples = 0;
                 continueProcess = false;
+
+                // If no need to validate or validate required and distance is valid move to next stage
+                if (valueBaselineDist >= minDistance)
+                {
+                    currentStage = next;
+                } else
+                {
+                    // Input was bad this stage!
+                    inputStageInvalid = true;
+                }
 
                 // Stop self from continuing if there's another step in the future
                 if (next != CalibrationStage.Finished)

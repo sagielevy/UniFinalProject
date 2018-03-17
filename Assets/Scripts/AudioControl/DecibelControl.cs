@@ -15,7 +15,7 @@ namespace Assets.Scripts.AudioControl
             decibelOffsets = offsets;
         }
 
-        public bool isInputValid(float soundInput)
+        public bool IsInputValid(float soundInput)
         {
             // Below range, ignore
             return soundInput > decibelOffsets.Min;
@@ -27,7 +27,7 @@ namespace Assets.Scripts.AudioControl
             // Make sure that if is too silent (under a threshold), consider as no input of ANY data
 
             // Below range, return 0
-            if (!isInputValid(soundInput))
+            if (!IsInputValid(soundInput))
             {
                 return 0;
             }

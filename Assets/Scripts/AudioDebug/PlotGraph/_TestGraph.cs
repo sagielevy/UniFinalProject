@@ -37,7 +37,7 @@ namespace Assets.Scripts.AudioDebug.PlotGraph
 
         void FixedUpdate()
         {
-            var melValRange = DecibelControl.isInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) : PitchControl.NoData;
+            var melValRange = DecibelControl.IsInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) : PitchControl.NoData;
             var dbValRange = DecibelControl.SoundForce(MicIn.DbValue);
             Graph.channel[0].Feed(Graph.YMax - melValRange);
             Graph.channel[1].Feed(Graph.YMax - dbValRange);

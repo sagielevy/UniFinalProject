@@ -586,7 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instructions: {fileID: 769320881}
-  seconds: {fileID: 1764303930}
+  ErrorMsg: {fileID: 1764303930}
   nextStageBtn: {fileID: 1065258788}
 --- !u!114 &1145582565
 MonoBehaviour:
@@ -721,7 +721,7 @@ GameObject:
   - component: {fileID: 1764303931}
   - component: {fileID: 1764303930}
   m_Layer: 5
-  m_Name: Seconds
+  m_Name: Error Msg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -777,7 +777,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &1764303931
 CanvasRenderer:
   m_ObjectHideFlags: 0

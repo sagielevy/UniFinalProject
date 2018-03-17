@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.Debug.PlotGraph
+namespace Assets.Scripts.AudioDebug.PlotGraph
 {
     public class Channel
     {

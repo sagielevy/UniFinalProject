@@ -36,15 +36,15 @@ namespace Assets.Scripts.AudioControl
         private float pitchHighValue = 0;
 
         private CalibrationStage currentStage;
-        private CalibrationStage nextStage;
+        //private CalibrationStage nextStage;
         private float stageStartingTime;
         private int numOfPrevSamples = 0;
-        private bool calibrate;
+        private bool continueProcess;
         private IEnumerator calibrateProcess;
 
-        private const float sampleTimeOffset = 1.0f;
+        private const float sampleTimeOffset = 3.0f;
         private const float finishStageTime = 3.0f;
-        private const float pauseStageTime = 2.0f;
+        //private const float pauseStageTime = 2.0f;
         private const float defaultBaselineThreshold = 0.01f;
 
         public CalibrationStage GetCurrentStage()
@@ -56,7 +56,13 @@ namespace Assets.Scripts.AudioControl
         {
             calibrateProcess = Calibrate();
             stageStartingTime = Time.fixedTime;
-            calibrate = true;
+            continueProcess = true;
+        }
+
+        public void ContinueCalibrating()
+        {
+            continueProcess = true;
+            stageStartingTime = Time.fixedTime;
         }
 
         public bool IsCalibrationComplete()
@@ -71,7 +77,7 @@ namespace Assets.Scripts.AudioControl
 
         private void FixedUpdate()
         {
-            if (calibrate)
+            if (continueProcess)
             {
                 StartCoroutine(calibrateProcess);
             }
@@ -112,18 +118,17 @@ namespace Assets.Scripts.AudioControl
                         break;
 
                     case CalibrationStage.Pause:
-
-                        // Finised silence
-                        if (Time.fixedTime - stageStartingTime > pauseStageTime)
-                        {
-                            currentStage = nextStage;
-                            stageStartingTime = Time.fixedTime;
-                        }
+                        //// Finised silence
+                        //if (Time.fixedTime - stageStartingTime > pauseStageTime)
+                        //{
+                        //    currentStage = nextStage;
+                        //    stageStartingTime = Time.fixedTime;
+                        //}
 
                         break;
 
                     case CalibrationStage.Finished:
-                        calibrate = false;
+                        continueProcess = false;
                         VolumeProfile = new OffsetsProfile(volumeBaseLineValue, volumeMaxValue, volumeMinValue, defaultBaselineThreshold);
                         PitchProfile = new OffsetsProfile(pitchBaseLineValue, pitchHighValue, pitchLowValue, defaultBaselineThreshold);
                         break;
@@ -135,12 +140,11 @@ namespace Assets.Scripts.AudioControl
 
         private void VolumeStage(ref float value, CalibrationStage next)
         {
-            // TODO sample a fixed number of times instead of using time?
             // Start sampling
-            if (Time.fixedTime - stageStartingTime > sampleTimeOffset)
+            if (Time.fixedTime - stageStartingTime < sampleTimeOffset)
             {
                 numOfPrevSamples++;
-                value = RollingAvrageVolume(value);
+                value = RollingAverageVolume(value);
             }
 
             InitPauseIfFinished(next);
@@ -149,35 +153,43 @@ namespace Assets.Scripts.AudioControl
         private void PitchStage(ref float value, CalibrationStage next)
         {
             // Start sampling
-            if (Time.fixedTime - stageStartingTime > sampleTimeOffset)
+            if (Time.fixedTime - stageStartingTime < sampleTimeOffset)
             {
                 numOfPrevSamples++;
-                value = RollingAvragePitch(value);
+                value = RollingAveragePitch(value);
             }
 
             InitPauseIfFinished(next);
         }
 
-        private float RollingAvrageVolume(float prevValue)
+        private float RollingAverageVolume(float prevValue)
         {
             prevValue = (prevValue * (numOfPrevSamples - 1)) / numOfPrevSamples;
             return prevValue + (MicIn.DbValue / numOfPrevSamples);
         }
 
-        private float RollingAvragePitch(float prevValue)
+        private float RollingAveragePitch(float prevValue)
         {
             prevValue = (prevValue * (numOfPrevSamples - 1)) / numOfPrevSamples;
-            return prevValue + (MicIn.MelValue / numOfPrevSamples);
+            return prevValue + (MicIn.PitchValue / numOfPrevSamples);
         }
 
         private void InitPauseIfFinished(CalibrationStage next)
         {
             if (Time.fixedTime - stageStartingTime > finishStageTime)
             {
-                currentStage = CalibrationStage.Pause;
-                nextStage = next;
+                UnityEngine.Debug.Log("numOfPrevSamples: " + numOfPrevSamples);
+                //currentStage = CalibrationStage.Pause;
+                //nextStage = next;
+                currentStage = next;
                 numOfPrevSamples = 0;
-                stageStartingTime = Time.fixedTime;
+                continueProcess = false;
+
+                // Stop self from continuing if there's another step in the future
+                if (next != CalibrationStage.Finished)
+                {
+                    StopCoroutine(calibrateProcess);
+                }
             }
         }
     }

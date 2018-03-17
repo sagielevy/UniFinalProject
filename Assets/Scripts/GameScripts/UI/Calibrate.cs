@@ -26,13 +26,14 @@ namespace Assets.Scripts.GameScripts.UI
         private const string PitchHigh = "Keep making an \"aaaaaah...\" sound,\nbut now gradually increase your tone till you reach a tone that you can't raise elegantly.";
         private const string SecondsLeftMsg = "Seconds left: {0}";
         private const string PressToBegin = "Press to begin";
-        private const string PressNextStep = "Press to continue to the next step";
+        private const string PressStartStep = "Press to start this step";
+        private const string PressDisabled = "Step processing...";
         private const string Finish = "Calibrating complete!";
-        private const int InitDelay = 5;
+        private const int InitDelay = 3;
 
         public Text instructions;
         public Text seconds;
-        public Button button;
+        public Button nextStageBtn;
         private Text buttonText;
         private Calibration calibrator;
 
@@ -59,7 +60,7 @@ namespace Assets.Scripts.GameScripts.UI
         {
             instructions.text = Welcome;
             seconds.text = "";
-            buttonText = button.GetComponentInChildren<Text>();
+            buttonText = nextStageBtn.GetComponentInChildren<Text>();
             buttonText.text = PressToBegin;
             hasBegun = false;
             calibrator = GetComponent<Calibration>();
@@ -67,10 +68,19 @@ namespace Assets.Scripts.GameScripts.UI
         }
 
         public void BeginProcess()
-        {
+        {// TODO handle the first press differently - dont jump straight to the first step, give another click request or something
             hasBegun = true;
-            buttonText.text = PressNextStep;
-            button.enabled = false;
+            buttonText.text = PressDisabled;
+            nextStageBtn.onClick.RemoveAllListeners();
+            nextStageBtn.onClick.AddListener(() => { ContinueProcess(); });
+            nextStageBtn.interactable = false;
+        }
+
+        public void ContinueProcess()
+        {
+            calibrator.ContinueCalibrating();
+            nextStageBtn.interactable = false;
+            buttonText.text = PressDisabled;
         }
 
         private void FixedUpdate()
@@ -103,12 +113,15 @@ namespace Assets.Scripts.GameScripts.UI
             {
                 var newStage = stageText[calibrator.GetCurrentStage()];
 
-                // Change text according to step
+                // Stage change
                 if (newStage != instructions.text)
                 {
+                    // Change text according to step
                     instructions.text = newStage;
 
-                    // Count down time somehow?
+                    // Enable button for the player to continue
+                    nextStageBtn.interactable = true;
+                    buttonText.text = PressStartStep;
                 }
 
                 yield return null;

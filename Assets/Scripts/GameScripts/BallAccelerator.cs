@@ -24,11 +24,17 @@ namespace Assets.Scripts.GameScripts
             body = GetComponent<Rigidbody>();
             body.maxAngularVelocity = maxVelocity;
 
-            // DEBUG ONLY! REMOVE AFTERWARDS - GET DATA FROM CALLIBRATOR
-            PitchOffset = new OffsetsProfile(107, 175, 75, 0.01f);
-            DbOffset = new OffsetsProfile(-8, 5, -20, 0.01f);
+            // Load player data
+            var profiles = Helpers.LoadPlayerProfile(PlayerPrefs.GetString(Helpers.playerPrefsKey));
+
+            //PitchOffset = new OffsetsProfile(107, 175, 75, 0.01f);
+            //DbOffset = new OffsetsProfile(-8, 5, -20, 0.01f);
+            PitchOffset = profiles[Helpers.pitchFileName];
+            DbOffset = profiles[Helpers.volFileName];
             PitchControl = new PitchControl(PitchOffset);
             DecibelControl = new DecibelControl(DbOffset);
+
+            // TODO Set max velocity and forceScale according to currnet level and difficulty
         }
 
         public void FixedUpdate()

@@ -18,7 +18,7 @@ namespace Assets.Scripts.GameScripts.UI
 
         private void Start()
         {
-            StartNewGame.enabled = false;
+            StartNewGame.interactable = false;
             LoadPlayerNames();
         }
 
@@ -26,15 +26,14 @@ namespace Assets.Scripts.GameScripts.UI
         {
             var players = Helpers.LoadPlayers();
 
-
-
             for (int i = 0; i < players.Length; i++)
             {
                 var newBtn = Instantiate(StartNewGame);
                 newBtn.transform.SetParent(ScrollViewContent, false);
-                newBtn.enabled = true;
+                newBtn.interactable = true;
                 newBtn.GetComponentInChildren<Text>().text = players[i];
-                newBtn.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, (int)Math.Pow(-1, i) * i * newBtn.GetComponent<RectTransform>().rect.height, 0);
+                newBtn.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, (int)Math.Pow(-1, i) * 
+                    ((i + 1) / 2) * newBtn.GetComponent<RectTransform>().rect.height, 0);
 
                 var playerName = players[i];
                 newBtn.onClick.AddListener(() => { SelectPlayer(playerName); });
@@ -51,7 +50,7 @@ namespace Assets.Scripts.GameScripts.UI
 
         public void EnableStartNewGameOnPlayerNameInput()
         {
-            StartNewGame.enabled = playerNameInput.text.Length > 0;
+            StartNewGame.interactable = playerNameInput.text.Length > 0;
         }
 
         public void OnStartNewGame()

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.AudioDebug
 {
     public class DebugGrid : MonoBehaviour
     {

@@ -17,6 +17,8 @@ namespace Assets.Scripts.AudioControl
         public readonly static string playersListFile = "Players.dat";
         private readonly static string filenameFormat = "{0}_{1}.dat";
 
+        // TODO Save current level and difficulty data for each player
+
         /// <summary>
         /// Convert via the following popular formula:
         /// m = 2595 * Log10(1 + f/700)

@@ -118,7 +118,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh29114
+  m_Name: pb_Mesh26404
   serializedVersion: 8
   m_SubMeshes:
   - serializedVersion: 2
@@ -466,8 +466,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MicIn: {fileID: 268266437}
-  forceScale: 5
-  maxVelocity: 6.5
+  forceScale: 3
+  maxVelocity: 5
 --- !u!1 &1662725248
 GameObject:
   m_ObjectHideFlags: 0

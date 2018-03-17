@@ -16,7 +16,7 @@ namespace Assets.Scripts.AudioControl
         }
 
         public const float NoData = 0;
-
+        // TODO find out why getting NaN sometimes!!
         public float SoundForce(float hertzSoundInput)
         {
             float melInput = Helpers.HertzToMel(hertzSoundInput);

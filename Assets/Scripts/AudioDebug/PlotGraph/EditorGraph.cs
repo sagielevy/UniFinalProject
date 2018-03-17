@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-namespace Assets.Scripts.Debug.PlotGraph
+namespace Assets.Scripts.AudioDebug.PlotGraph
 {
     public class EditorGraph : EditorWindow
     {
@@ -63,8 +63,6 @@ namespace Assets.Scripts.Debug.PlotGraph
             GL.LoadPixelMatrix();
 
             GL.Begin(GL.LINES);
-
-            float yy = 50;
 
             for (int chan = 0; chan < Graph.MAX_CHANNELS; chan++)
             {

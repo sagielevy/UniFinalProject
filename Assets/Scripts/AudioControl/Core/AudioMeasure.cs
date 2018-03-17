@@ -15,11 +15,9 @@ namespace Assets.Scripts.AudioControl.Core
         public float RmsValue { get; private set; }
         public float DbValue { get; private set; }
         public float PitchValue { get; private set; }
-        public float MelValue { get; private set; }
-        private float OldPitchValue { get; set; }
-        private float OldDbValue { get; set; }
+        //public float MelValue { get; private set; }
 
-        private static AudioMeasure instance;
+        //private static AudioMeasure instance;
         private AudioSource Audio;
         private string audioInputDevice;
         private const int samplerate = 44100;
@@ -115,9 +113,6 @@ namespace Assets.Scripts.AudioControl.Core
 
         void AnalyzeSound()
         {
-            OldPitchValue = PitchValue;
-            OldDbValue = DbValue;
-
             // Wait until the recording has started. Should clear delay
             while (!(Microphone.GetPosition(audioInputDevice) > 0)) { }
 
@@ -151,6 +146,9 @@ namespace Assets.Scripts.AudioControl.Core
 
             // Convert index to frequency
             PitchValue = freqN * (AudioSettings.outputSampleRate / 2) / QSamples;
+
+            // Set Mel as well
+            //MelValue = Helpers.HertzToMel(PitchValue);
 
             CalcRmsAndDb(harmonicIndices);
            }

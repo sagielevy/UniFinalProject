@@ -45,7 +45,7 @@ namespace Assets.Scripts.GameScripts.UI
             DataBetweenScenes.PlayerNameInput = playerName;
 
             // TODO Load the correct level for this player
-            SceneManager.LoadScene("Level 1");
+            SceneManager.LoadScene(Constants.FirstLevelSceneBuildIndex);
         }
 
         public void EnableStartNewGameOnPlayerNameInput()

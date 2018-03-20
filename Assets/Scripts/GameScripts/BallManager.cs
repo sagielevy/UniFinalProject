@@ -14,11 +14,13 @@ namespace Assets.Scripts.GameScripts
     [RequireComponent(typeof(Rigidbody))]
     public class BallManager : MonoBehaviour
     {
-        public int level;
+        public int currLevelIndex = 0;
         public AudioMeasure MicIn;
         public float forceScale = 1.0f;
         public float maxVelocity = 6.0f;
         public float levelFloorY = -10; // The "ground". The level should reset if the ball has reached this "plane"
+        public float drag = 0;
+        public float angularDrag = 0.05f;
         public Vector3 initialPosition;
         private Rigidbody body;
         private Fading fading;
@@ -26,23 +28,28 @@ namespace Assets.Scripts.GameScripts
         private PitchControl PitchControl;
         private DecibelControl DecibelControl;
         private IEnumerator levelLoader;
+        private bool startLoadingNewLevel = false;
 
         private void Start()
         {
+            // Change rigidbody values as set
             body = GetComponent<Rigidbody>();
             body.maxAngularVelocity = maxVelocity;
+            body.drag = drag;
+            body.angularDrag = angularDrag;
 
             // Load player data
             var profiles = Helpers.LoadPlayerProfile(PlayerPrefs.GetString(Helpers.playerPrefsKey));
 
-            //PitchOffset = new OffsetsProfile(107, 175, 75, 0.01f);
-            //DbOffset = new OffsetsProfile(-8, 5, -20, 0.01f);
             PitchOffset = profiles[Helpers.pitchFileName];
             DbOffset = profiles[Helpers.volFileName];
             PitchControl = new PitchControl(PitchOffset);
             DecibelControl = new DecibelControl(DbOffset);
-            fading = GameObject.Find("Fading").GetComponent<Fading>();
             levelLoader = LoadNewLevel();
+            fading = GameObject.Find("Fading").GetComponent<Fading>();
+
+            // Fade in if necessary
+            fading.BeginFade(Fading.FadeIn);
 
             // TODO Set max velocity and forceScale according to currnet level and difficulty
         }
@@ -60,6 +67,12 @@ namespace Assets.Scripts.GameScripts
             {
                 LevelRestart();
             }
+
+            // Start level loader coroutine
+            if (startLoadingNewLevel)
+            {
+                StartCoroutine(levelLoader);
+            }
         }
 
         private void LevelRestart()
@@ -74,25 +87,25 @@ namespace Assets.Scripts.GameScripts
         IEnumerator LoadNewLevel()
         {
             fading.BeginFade(Fading.FadeOut);
-            var nextLevel = SceneManager.GetSceneByName("Level " + level + 1);
-            SceneManager.MoveGameObjectToScene(fading.gameObject, nextLevel);
 
             while (!fading.IsComplete())
             {
                 yield return null;
             }
 
-            SceneManager.LoadScene(nextLevel.name);
+            var nextLevel = currLevelIndex + 1 + Constants.FirstLevelSceneBuildIndex;
+
+            // Load next level. Make sure it exists?
+            if (SceneManager.sceneCountInBuildSettings > nextLevel)
+            {
+                SceneManager.LoadScene(nextLevel);
+            }
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             // If reached the finish line
-            if (collision.transform.CompareTag("Finish"))
-            {
-                // Start level loader coroutine
-                StartCoroutine(levelLoader);
-            }
+            startLoadingNewLevel = startLoadingNewLevel || (collision.transform.CompareTag("Finish"));
         }
     }
 }

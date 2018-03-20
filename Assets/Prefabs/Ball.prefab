@@ -111,10 +111,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 514ae61d9414b10488a7aa645bc1fbac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currLevelIndex: 0
   MicIn: {fileID: 0}
   forceScale: 3
   maxVelocity: 5
   levelFloorY: -10
+  drag: 0.8
+  angularDrag: 0.05
   initialPosition: {x: 0, y: 0, z: 0}
 --- !u!135 &135357055220089142
 SphereCollider:

@@ -27,6 +27,9 @@ namespace Assets.Scripts.AudioControl
         /// <returns></returns>
         public static float HertzToMel(float hertz)
         {
+            if (Mathf.Log10(1 + hertz / 700) == float.NaN)
+                Debug.LogError("nan! " + hertz);
+
             return 2595 * Mathf.Log10(1 + hertz / 700);
         }
 

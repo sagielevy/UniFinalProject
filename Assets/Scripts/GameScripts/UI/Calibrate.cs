@@ -1,4 +1,6 @@
 ﻿using Assets.Scripts.AudioControl;
+using Assets.Scripts.AudioControl.Core;
+using ProgressBar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace Assets.Scripts.GameScripts.UI
     [RequireComponent(typeof(Calibration))]
     public class Calibrate : MonoBehaviour
     {
-        private const string Welcome = "Before we begin we need to calibrate our systems to meet your vocal capabilities";
+        private const string Welcome = "Before we begin we need to calibrate our systems to meet your vocal capabilities.\nPlease keep a constant distance from your microphone and lock its gain";
         private const string Pause = "Great! Processing your voice. Please wait a moment";
         private const string Silence = "Please make no sound and make sure there's as little noise as possible around you.";
         private const string VolumeBaseline = "Make an \"aaaaaah...\" sound with your normal speaking volume";
@@ -35,6 +37,7 @@ namespace Assets.Scripts.GameScripts.UI
         public Text instructions;
         public Text ErrorMsg;
         public Button nextStageBtn;
+        public ProgressBarBehaviour progressBar;
         private Text buttonText;
         private Calibration calibrator;
 
@@ -105,6 +108,9 @@ namespace Assets.Scripts.GameScripts.UI
                 var newStage = stageText[calibrator.GetCurrentStage()];
                 bool inputError = false;
 
+                // Update progress bar if relevant
+                progressBar.SetFillerSizeAsPercentage(calibrator.GetCurrentDistancePercent);
+
                 // Stage change
                 if (newStage != instructions.text || (inputError = calibrator.IsInputStageInvalid()))
                 {
@@ -140,7 +146,7 @@ namespace Assets.Scripts.GameScripts.UI
             PlayerPrefs.Save();
 
             // Load the first level
-            SceneManager.LoadScene("Level 1");
+            SceneManager.LoadScene(Constants.FirstLevelSceneBuildIndex);
         }
     }
 }

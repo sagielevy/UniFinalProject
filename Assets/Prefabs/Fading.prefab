@@ -52,4 +52,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeOutTexture: {fileID: 2800000, guid: 7872ce3cc960bad49b98f74a63c1f37f, type: 3}
-  fadeSpeed: 1.5
+  fadeSpeed: 0.3

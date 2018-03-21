@@ -42,7 +42,9 @@ namespace Assets.Scripts.GameScripts.UI
 
         private void SelectPlayer(string playerName)
         {
-            DataBetweenScenes.PlayerNameInput = playerName;
+            // Set current player 
+            PlayerPrefs.SetString(Helpers.playerPrefsKey, playerName);
+            PlayerPrefs.Save();
 
             // TODO Load the correct level for this player
             SceneManager.LoadScene(Constants.FirstLevelSceneBuildIndex);

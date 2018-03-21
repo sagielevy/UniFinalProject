@@ -21,14 +21,14 @@ namespace Assets.Scripts.AudioDebug
 
         private void Awake()
         {
-            //PitchOffset = new OffsetsProfile(107, 175, 75, 0.02f);
-            //DbOffset = new OffsetsProfile(-8, 5, -20, 0.1f);
+            PitchOffset = new OffsetsProfile(107, 175, 75, 0.02f);
+            DbOffset = new OffsetsProfile(-8, 5, -20, 0.1f);
         }
 
         private void Start()
         {
-            //PitchControl = new PitchControl(PitchOffset);
-            //DecibelControl = new DecibelControl(DbOffset);
+            PitchControl = new PitchControl(PitchOffset);
+            DecibelControl = new DecibelControl(DbOffset);
 
             GridWidth = GetComponent<SpriteRenderer>().sprite.bounds.size.x;
             GridHeight = GetComponent<SpriteRenderer>().sprite.bounds.size.y;
@@ -37,12 +37,12 @@ namespace Assets.Scripts.AudioDebug
         private void FixedUpdate()
         {
             // Validate pitch by Db
-            //float xPos = DecibelControl.IsInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) * (GridWidth / 2) : PitchControl.NoData;
-            //float yPos = DecibelControl.SoundForce(MicIn.DbValue) * (GridHeight / 2);
+            float xPos = DecibelControl.IsInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) * (GridWidth / 2) : PitchControl.NoData;
+            float yPos = DecibelControl.SoundForce(MicIn.DbValue) * (GridHeight / 2);
 
             // Move hit relative to grid size
-            MarkHit.transform.position = new Vector3(MicIn.PitchValue * (GridWidth / 2), //xPos,
-                                                     MicIn.DbValue * (GridHeight / 2), //yPos,
+            MarkHit.transform.position = new Vector3(xPos,//MicIn.PitchValue * (GridWidth / 2), 
+                                                     yPos, //MicIn.DbValue * (GridHeight / 2), 
                                                      MarkHit.transform.position.z);
         }
     }

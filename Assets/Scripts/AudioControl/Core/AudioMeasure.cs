@@ -147,11 +147,23 @@ namespace Assets.Scripts.AudioControl.Core
             // Convert index to frequency
             PitchValue = freqN * (AudioSettings.outputSampleRate / 2) / QSamples;
 
+            if (PitchValue == float.NaN)
+            {
+                Debug.LogError("GCD is Nan!!!");
+
+                Debug.LogError("Freq: " + freqN);
+
+                foreach (var item in harmonicIndices)
+                {
+                    Debug.LogError("harmonic index: " + item);
+                }
+            }
+
             // Set Mel as well
             //MelValue = Helpers.HertzToMel(PitchValue);
 
             CalcRmsAndDb(harmonicIndices);
-           }
+        }
 
         // Return hz index of any sample i that has a sample i-1 with lower value and sample i+1 with lower value
         private int[] FindLocalMaximums(ValueAndIndex[] samplesAndIndices)

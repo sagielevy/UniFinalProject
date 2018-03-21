@@ -10,7 +10,6 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
 {
     public enum CalibrationStage
     {
-        Silence,
         VolumeBaseLine,
         VolumeMin,
         VolumeMax,
@@ -31,7 +30,6 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
         #endregion
 
         #region protected members
-        protected float silenceValue = 0;
         protected float volumeBaseLineValue = 0;
         protected float volumeMinValue = 0;
         protected float volumeMaxValue = 0;
@@ -97,7 +95,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
             }
 
             calibrateProcess = Calibrate();
-            currentStage = CalibrationStage.Silence;
+            currentStage = GetInitialStage();
             inputStageInvalid = false;
             continueProcess = false;
             numOfPrevSamples = 0;
@@ -106,6 +104,8 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
 
         #region protected methods
         protected abstract IEnumerator Calibrate();
+
+        protected abstract CalibrationStage GetInitialStage();
 
         protected void VolumeStage(ref float value)
         {

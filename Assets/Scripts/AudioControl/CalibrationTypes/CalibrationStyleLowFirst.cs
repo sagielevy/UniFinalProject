@@ -16,12 +16,6 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
             {
                 switch (currentStage)
                 {
-                    case CalibrationStage.Silence:
-                        VolumeStage(ref silenceValue);
-                        InitPauseIfFinished(CalibrationStage.VolumeMin);
-                        CalcCurrentDistancePercent();
-                        break;
-
                     case CalibrationStage.VolumeMin:
                         VolumeStage(ref volumeMinValue);
                         InitPauseIfFinished(CalibrationStage.VolumeBaseLine);
@@ -89,6 +83,11 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
 
                 yield return null;
             }
+        }
+
+        protected override CalibrationStage GetInitialStage()
+        {
+            return CalibrationStage.VolumeMin;
         }
     }
 }

@@ -32,12 +32,12 @@ namespace ProgressBar.Utils
     {
         public FillerProperty(float Min, float Max)
         {
-            MinWidth = Min;
-            MaxWidth = Max;
+            MinHeight = Min;
+            MaxHeight = Max;
         }
 
-        public float MaxWidth;
-        public float MinWidth;
+        public float MaxHeight;
+        public float MinHeight;
     }
 
     /// <summary>

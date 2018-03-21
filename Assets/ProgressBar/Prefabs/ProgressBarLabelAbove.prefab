@@ -214,7 +214,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 22423008}
   m_AttachedText: {fileID: 11423006}
   ProgressSpeed: 150
-  TriggerOnComplete: 1
+  TriggerOnComplete: 0
   OnCompleteMethods:
     m_PersistentCalls:
       m_Calls:

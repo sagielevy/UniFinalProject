@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.AudioControl;
+using Assets.Scripts.AudioControl.CalibrationTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,10 +17,19 @@ namespace Assets.Scripts.GameScripts.UI
         public Button StartNewGame;
         public RectTransform ScrollViewContent;
 
+        // For debug, use different calibration.
+        Dictionary<int, Type> CalibrationTypes;
+
         private void Start()
         {
             StartNewGame.interactable = false;
             LoadPlayerNames();
+
+            // Set calibration types
+            CalibrationTypes = new Dictionary<int, Type>();
+            CalibrationTypes[0] = typeof(CalibrationStyleMiddleFirst);
+            CalibrationTypes[1] = typeof(CalibrationStyleLowFirst);
+            DataBetweenScenes.calibration = CalibrationTypes[0]; // Default val
         }
 
         public void LoadPlayerNames()
@@ -59,6 +69,11 @@ namespace Assets.Scripts.GameScripts.UI
         {
             DataBetweenScenes.PlayerNameInput = playerNameInput.text;
             SceneManager.LoadScene("Calibrate");
+        }
+
+        public void OnCalibrationChaned(int value)
+        {
+            DataBetweenScenes.calibration = CalibrationTypes[value];
         }
     }
 }

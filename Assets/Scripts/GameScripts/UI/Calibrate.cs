@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.AudioControl;
+using Assets.Scripts.AudioControl.CalibrationTypes;
 using Assets.Scripts.AudioControl.Core;
 using ProgressBar;
 using System;
@@ -12,7 +13,6 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.GameScripts.UI
 {
-    [RequireComponent(typeof(Calibration))]
     public class Calibrate : MonoBehaviour
     {
         private const string Welcome = "Before we begin we need to calibrate our systems to meet your vocal capabilities.\nPlease keep a constant distance from your microphone and lock its gain";
@@ -32,16 +32,15 @@ namespace Assets.Scripts.GameScripts.UI
         private const string PressDisabled = "Step processing...";
         private const string Finish = "Calibrating complete!";
         private const string ErrorBadInput = "Bad input while calibrating... Please try again.\nPay close attention to the instructions and try avoiding noisy areas";
-        //private const int InitDelay = 3;
 
         public Text instructions;
         public Text ErrorMsg;
         public Button nextStageBtn;
-        public ProgressBarBehaviour progressBar;
+        public ThresholdBar thresholdBar;
+        public Calibration[] calibrations;
         private Text buttonText;
         private Calibration calibrator;
 
-        //private int secondsLeft;
         private bool hasBegun;
         private Dictionary<CalibrationStage, string> stageText;
         private IEnumerator handleCalibration;
@@ -49,7 +48,7 @@ namespace Assets.Scripts.GameScripts.UI
         private void Awake()
         {
             stageText = new Dictionary<CalibrationStage, string>();
-            stageText[CalibrationStage.Silence] = Silence;
+            //stageText[CalibrationStage.Silence] = Silence;
             stageText[CalibrationStage.Pause] = Pause;
             stageText[CalibrationStage.PitchLow] = PitchLow;
             stageText[CalibrationStage.PitchHigh] = PitchHigh;
@@ -67,8 +66,20 @@ namespace Assets.Scripts.GameScripts.UI
             buttonText = nextStageBtn.GetComponentInChildren<Text>();
             buttonText.text = PressToBegin;
             hasBegun = false;
-            calibrator = GetComponent<Calibration>();
+
+            // Find correct calibration type
+            foreach (var calibObj in calibrations)
+            {
+                if (calibObj.GetType().Name == DataBetweenScenes.calibration.Name)
+                {
+                    calibrator = calibObj;
+                    break;
+                }
+            }
+
             handleCalibration = HandleCalibration();
+
+
         }
 
         public void BeginProcess()
@@ -109,7 +120,7 @@ namespace Assets.Scripts.GameScripts.UI
                 bool inputError = false;
 
                 // Update progress bar if relevant
-                progressBar.SetFillerSizeAsPercentage(calibrator.GetCurrentDistancePercent);
+                thresholdBar.SetFillerSizeAsPercentage(calibrator.GetCurrentDistancePercent);
 
                 // Stage change
                 if (newStage != instructions.text || (inputError = calibrator.IsInputStageInvalid()))

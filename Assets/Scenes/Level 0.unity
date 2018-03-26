@@ -330,26 +330,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 11400002, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_Target
-      value: 
-      objectReference: {fileID: 1558187483}
-    - target: {fileID: 11400000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_FollowTilt
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_SpinTurnLimit
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_TurnSpeed
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
   m_IsPrefabParent: 0
@@ -447,11 +427,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4089279882990158, guid: 87c920eec8255a9439103436e7f9b72b,
     type: 2}
   m_PrefabInternal: {fileID: 1530447553}
---- !u!4 &1558187483 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4102416833716610, guid: 82012724e5ef07841b59f17bb42cb44d,
-    type: 2}
-  m_PrefabInternal: {fileID: 626448500}
 --- !u!1 &1662725248
 GameObject:
   m_ObjectHideFlags: 0

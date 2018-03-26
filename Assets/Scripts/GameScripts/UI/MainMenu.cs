@@ -56,6 +56,9 @@ namespace Assets.Scripts.GameScripts.UI
             PlayerPrefs.SetString(Helpers.playerPrefsKey, playerName);
             PlayerPrefs.Save();
 
+            // Debug - print player profile
+            Helpers.PrintPlayerProfile(playerName);
+
             // TODO Load the correct level for this player
             SceneManager.LoadScene(Constants.FirstLevelSceneBuildIndex);
         }

@@ -71,6 +71,16 @@ namespace Assets.Scripts.AudioControl
             file.Close();
         }
 
+        public static void PrintPlayerProfile(string playerName)
+        {
+            var profiles = LoadPlayerProfile(playerName);
+
+            // Print profiles
+            Debug.Log(playerName + " profile offsets:");
+            Debug.Log("Volume profile: " + profiles[volFileName]);
+            Debug.Log("Pitch profile: " + profiles[pitchFileName]);
+        }
+
         public static string[] LoadPlayers()
         {
             PlayersList playersList = new PlayersList();

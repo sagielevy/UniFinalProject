@@ -62,6 +62,18 @@ namespace Assets.Scripts.GameScripts
 
             body.AddForce(new Vector3(xAcc * forceScale, 0, zAcc * forceScale));
 
+            if (xAcc * forceScale == float.NaN)
+            {
+                //Debug.LogError("Freq: " + freqN);
+
+                //foreach (var item in harmonicIndices)
+                //{
+                //    Debug.LogError("harmonic index: " + item);
+                //}
+
+                Debug.LogError("pitch val: " + MicIn.PitchValue);
+            }
+
             // Check if to reset level
             if (transform.position.y < levelFloorY)
             {

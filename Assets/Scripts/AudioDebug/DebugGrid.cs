@@ -22,7 +22,7 @@ namespace Assets.Scripts.AudioDebug
         private void Awake()
         {
             PitchOffset = new OffsetsProfile(107, 175, 75, 0.02f);
-            DbOffset = new OffsetsProfile(-8, 5, -20, 0.1f);
+            DbOffset = new OffsetsProfile(-9, 1, -20, 0.1f);
         }
 
         private void Start()

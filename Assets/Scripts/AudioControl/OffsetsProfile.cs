@@ -32,5 +32,11 @@ namespace Assets.Scripts.AudioControl
             MelMax = Helpers.HertzToMel(Max);
             MelMin = Helpers.HertzToMel(Min);
         }
+
+        public override string ToString()
+        {
+            return string.Format("Min: {0}, Baseline: {1}, Max: {2}, MelMin: {3}, MelBaseline: {4}, MelMax: {5}", 
+                Min, Baseline, Max, MelMin, MelBaseline, MelMax);
+        }
     }
 }

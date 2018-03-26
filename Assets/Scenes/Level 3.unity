@@ -7028,30 +7028,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 11400002, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_Target
-      value: 
-      objectReference: {fileID: 1058896654}
-    - target: {fileID: 11400000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_FollowTilt
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_SpinTurnLimit
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_TurnSpeed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400004, guid: baec086904791744185aaa07a6cf55c2, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
   m_IsPrefabParent: 0
@@ -7109,14 +7085,18 @@ Prefab:
       propertyPath: levelFloorY
       value: -66
       objectReference: {fileID: 0}
+    - target: {fileID: 1724316735541506, guid: 82012724e5ef07841b59f17bb42cb44d, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23099580323386784, guid: 82012724e5ef07841b59f17bb42cb44d,
+        type: 2}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 82012724e5ef07841b59f17bb42cb44d, type: 2}
   m_IsPrefabParent: 0
---- !u!4 &1058896654 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4102416833716610, guid: 82012724e5ef07841b59f17bb42cb44d,
-    type: 2}
-  m_PrefabInternal: {fileID: 1058896653}
 --- !u!43 &1121286294
 Mesh:
   m_ObjectHideFlags: 0

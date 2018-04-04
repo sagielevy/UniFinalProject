@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.GameScripts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,14 @@ namespace Assets.Scripts.AudioControl
         // Between 0-1. Works as percentage. If input is beyond that in percentage, makes change.
         public float BaselineThreshold { get; private set; }
         //public float MaxMargin { get; }
+
+        // Default non responsive profile
+        public OffsetsProfile()
+        {
+            // All zeros, baseline is constant
+            Baseline = Constants.DefaultBaselineThreshold;
+            MelBaseline = Helpers.HertzToMel(Baseline);
+        }
 
         // Assumes inputs are valid. That is, 
         // max > baseline > min and 0 < baselineThreshold < 1

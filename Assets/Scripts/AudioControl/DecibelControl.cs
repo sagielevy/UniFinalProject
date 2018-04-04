@@ -52,14 +52,18 @@ namespace Assets.Scripts.AudioControl
             if (soundInput - decibelOffsets.Baseline < 0)
             {
                 // Lower than baseline, value is between [-1,0]
-                return (soundInput - decibelOffsets.Baseline) /
+                var result = (soundInput - decibelOffsets.Baseline) /
                        Mathf.Abs(decibelOffsets.Baseline - decibelOffsets.Min);
+
+                return (result == float.NaN) ? 0 : result;
             }
             else
             {
                 // Higher than baseline, value is between [0,1]
-                return (soundInput - decibelOffsets.Baseline) /
+                var result = (soundInput - decibelOffsets.Baseline) /
                        Mathf.Abs(decibelOffsets.Max - decibelOffsets.Baseline);
+
+                return (result == float.NaN) ? 0 : result;
             }
         }
     }

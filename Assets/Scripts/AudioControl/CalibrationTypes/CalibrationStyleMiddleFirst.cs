@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.GameScripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,54 +18,54 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
                 switch (currentStage)
                 {
                     case CalibrationStage.VolumeBaseLine:
-                        VolumeStage(ref volumeBaseLineValue);
-                        InitPauseIfFinished(CalibrationStage.VolumeMin);
-                        CalcCurrentDistancePercent();
+                        VolumeStageTimeBased(ref volumeBaseLineValue);
+                        InitPauseIfFinishedTimeBased(CalibrationStage.VolumeMin);
+                        //CalcCurrentDistancePercent();
                         break;
 
                     case CalibrationStage.VolumeMin:
-                        VolumeStage(ref volumeMinValue);
+                        VolumeStageTimeBased(ref volumeMinValue);
 
                         actualDist = volumeBaseLineValue - volumeMinValue;
 
-                        InitPauseIfFinished(CalibrationStage.VolumeMax, actualDist, minVolumeDist);
-                        CalcCurrentDistancePercent(actualDist, minVolumeDist);
+                        InitPauseIfFinishedTimeBased(CalibrationStage.VolumeMax, actualDist, minVolumeDist);
+                        //CalcCurrentDistancePercent(actualDist, minVolumeDist);
                         break;
 
                     case CalibrationStage.VolumeMax:
-                        VolumeStage(ref volumeMaxValue);
+                        VolumeStageTimeBased(ref volumeMaxValue);
 
                         actualDist = volumeMaxValue - volumeBaseLineValue;
 
-                        InitPauseIfFinished(CalibrationStage.PitchBaseLine, actualDist, minVolumeDist);
-                        CalcCurrentDistancePercent(actualDist, minVolumeDist);
+                        InitPauseIfFinishedTimeBased(CalibrationStage.PitchBaseLine, actualDist, minVolumeDist);
+                        //CalcCurrentDistancePercent(actualDist, minVolumeDist);
                         break;
 
                     case CalibrationStage.PitchBaseLine:
-                        PitchStage(ref pitchBaseLineValue);
-                        InitPauseIfFinished(CalibrationStage.PitchLow);
-                        CalcCurrentDistancePercent();
+                        PitchStageTimeBased(ref pitchBaseLineValue);
+                        InitPauseIfFinishedTimeBased(CalibrationStage.PitchLow);
+                        //CalcCurrentDistancePercent();
                         break;
 
                     case CalibrationStage.PitchLow:
-                        PitchStage(ref pitchLowValue);
+                        PitchStageTimeBased(ref pitchLowValue);
 
                         actualDist = pitchBaseLineValue - pitchLowValue;
 
-                        InitPauseIfFinished(CalibrationStage.PitchHigh, actualDist, minPitchDist);
-                        CalcCurrentDistancePercent(actualDist, minPitchDist);
+                        InitPauseIfFinishedTimeBased(CalibrationStage.PitchHigh, actualDist, minPitchDist);
+                        //CalcCurrentDistancePercent(actualDist, minPitchDist);
                         break;
 
                     case CalibrationStage.PitchHigh:
-                        PitchStage(ref pitchHighValue);
+                        PitchStageTimeBased(ref pitchHighValue);
 
                         actualDist = pitchHighValue - pitchBaseLineValue;
 
-                        InitPauseIfFinished(CalibrationStage.Finished, actualDist, minPitchDist);
-                        CalcCurrentDistancePercent(actualDist, minPitchDist);
+                        InitPauseIfFinishedTimeBased(CalibrationStage.Finished, actualDist, minPitchDist);
+                        //CalcCurrentDistancePercent(actualDist, minPitchDist);
                         break;
 
-                    case CalibrationStage.Pause:
+                    //case CalibrationStage.Pause:
                         //// Finised silence
                         //if (Time.fixedTime - stageStartingTime > pauseStageTime)
                         //{
@@ -72,12 +73,12 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
                         //    stageStartingTime = Time.fixedTime;
                         //}
 
-                        break;
+                        //break;
 
                     case CalibrationStage.Finished:
                         continueProcess = false;
-                        VolumeProfile = new OffsetsProfile(volumeBaseLineValue, volumeMaxValue, volumeMinValue, defaultVolumeBaselineThreshold);
-                        PitchProfile = new OffsetsProfile(pitchBaseLineValue, pitchHighValue, pitchLowValue, defaultPitchBaselineThreshold);
+                        VolumeProfile = new OffsetsProfile(volumeBaseLineValue, volumeMaxValue, volumeMinValue, Constants.DefaultVolumeBaselineThreshold);
+                        PitchProfile = new OffsetsProfile(pitchBaseLineValue, pitchHighValue, pitchLowValue, Constants.DefaultPitchBaselineThreshold);
                         break;
                 }
 

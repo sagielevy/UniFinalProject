@@ -47,14 +47,18 @@ namespace Assets.Scripts.AudioControl
             if (melInput - PitchOffsets.MelBaseline < 0)
             {
                 // Lower than baseline, value is between [-1,0]
-                return (melInput - PitchOffsets.MelBaseline) /
+                var result = (melInput - PitchOffsets.MelBaseline) /
                        Mathf.Abs(PitchOffsets.MelBaseline - PitchOffsets.MelMin);
+
+                return (result == float.NaN) ? 0 : result;
             }
             else
             {
                 // Higher than baseline, value is between [0,1]
-                return (melInput - PitchOffsets.MelBaseline) /
+                var result = (melInput - PitchOffsets.MelBaseline) /
                        Mathf.Abs(PitchOffsets.MelMax - PitchOffsets.MelBaseline);
+
+                return (result == float.NaN) ? 0 : result;
             }
         }
     }

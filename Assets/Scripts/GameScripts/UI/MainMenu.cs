@@ -15,7 +15,7 @@ namespace Assets.Scripts.GameScripts.UI
     {
         public InputField playerNameInput;
         public Button StartNewGame;
-        public RectTransform ScrollViewContent;
+        public ScrollRect ScrollView;
 
         // For debug, use different calibration.
         Dictionary<int, Type> CalibrationTypes;
@@ -39,7 +39,7 @@ namespace Assets.Scripts.GameScripts.UI
             for (int i = 0; i < players.Length; i++)
             {
                 var newBtn = Instantiate(StartNewGame);
-                newBtn.transform.SetParent(ScrollViewContent, false);
+                newBtn.transform.SetParent(ScrollView.content, false);
                 newBtn.interactable = true;
                 newBtn.GetComponentInChildren<Text>().text = players[i];
                 newBtn.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, (int)Math.Pow(-1, i) * 

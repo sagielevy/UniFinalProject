@@ -1,13 +1,6 @@
 ﻿using Assets.Scripts.AudioControl;
 using Assets.Scripts.AudioControl.Core;
-using Assets.Scripts.GameScripts.UI;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.GameScripts
 {
@@ -22,14 +15,14 @@ namespace Assets.Scripts.GameScripts
         public float drag = 0;
         public float angularDrag = 0.05f;
         public Vector3 initialPosition;
-        public OffsetsProfile PitchOffset { get { return pitchOffset; } set { pitchOffset = value; PitchControl = new PitchControl(pitchOffset); } }
-        public OffsetsProfile DbOffset { get { return dbOffset; } set { dbOffset = value; DecibelControl = new DecibelControl(dbOffset); } }
+        public OffsetsProfile PitchOffset { get { return pitchOffset; }
+            set { pitchOffset = value; PitchControl = new PitchControl(pitchOffset); LevelRestart(); } }
+        public OffsetsProfile DbOffset { get { return dbOffset; }
+            set { dbOffset = value; DecibelControl = new DecibelControl(dbOffset); LevelRestart(); } }
         private OffsetsProfile pitchOffset, dbOffset;
         private Rigidbody body;
         private PitchControl PitchControl;
         private DecibelControl DecibelControl;
-        private IEnumerator levelLoader;
-        private bool startLoadingNewLevel = false;
 
         private void Start()
         {
@@ -56,12 +49,6 @@ namespace Assets.Scripts.GameScripts
             if (transform.position.y < levelFloorY)
             {
                 LevelRestart();
-            }
-
-            // Start level loader coroutine
-            if (startLoadingNewLevel)
-            {
-                StartCoroutine(levelLoader);
             }
         }
 

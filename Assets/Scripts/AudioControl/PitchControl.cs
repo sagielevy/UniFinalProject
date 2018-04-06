@@ -8,6 +8,9 @@ namespace Assets.Scripts.AudioControl
 {
     public class PitchControl : ISoundControl
     {
+        private const float DefaultPitchRange = 100f;
+        public const float NoData = 0;
+
         OffsetsProfile PitchOffsets;
 
         public PitchControl(OffsetsProfile offsets)
@@ -15,10 +18,14 @@ namespace Assets.Scripts.AudioControl
             PitchOffsets = offsets;
         }
 
-        public const float NoData = 0;
-        // TODO find out why getting NaN sometimes!!
         public float SoundForce(float hertzSoundInput)
         {
+            // Ignore input
+            if (float.IsNaN(PitchOffsets.Baseline))
+            {
+                return 0;
+            }
+
             float melInput = Helpers.HertzToMel(hertzSoundInput);
 
             // Below range
@@ -35,7 +42,7 @@ namespace Assets.Scripts.AudioControl
 
             // Linear distance
             // Get actual margin value according to thershold, and distance between min and max
-            float actualThreshold = PitchOffsets.BaselineThreshold * (PitchOffsets.MelMax - PitchOffsets.MelMin);
+            float actualThreshold = PitchOffsets.BaselineThreshold * CalcRange();
 
             // If threshold was not passed, return 0
             if (Mathf.Abs(melInput - PitchOffsets.MelBaseline) < actualThreshold)
@@ -50,7 +57,7 @@ namespace Assets.Scripts.AudioControl
                 var result = (melInput - PitchOffsets.MelBaseline) /
                        Mathf.Abs(PitchOffsets.MelBaseline - PitchOffsets.MelMin);
 
-                return (result == float.NaN) ? 0 : result;
+                return float.IsNaN(result) ? 0 : result;
             }
             else
             {
@@ -58,8 +65,14 @@ namespace Assets.Scripts.AudioControl
                 var result = (melInput - PitchOffsets.MelBaseline) /
                        Mathf.Abs(PitchOffsets.MelMax - PitchOffsets.MelBaseline);
 
-                return (result == float.NaN) ? 0 : result;
+                return float.IsNaN(result) ? 0 : result;
             }
+        }
+
+        private float CalcRange()
+        {
+            var range = PitchOffsets.MelMax - PitchOffsets.MelMin;
+            return float.IsInfinity(range) ? DefaultPitchRange : range;
         }
     }
 }

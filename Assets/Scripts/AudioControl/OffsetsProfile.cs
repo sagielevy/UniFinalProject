@@ -24,9 +24,13 @@ namespace Assets.Scripts.AudioControl
         // Default non responsive profile
         public OffsetsProfile()
         {
-            // All zeros, baseline is constant
-            Baseline = Constants.DefaultBaselineThreshold;
-            MelBaseline = Helpers.HertzToMel(Baseline);
+            // All values NaN, baseline threshold is constant
+            Baseline = float.NaN;
+            Max = float.PositiveInfinity;
+            Min = float.NegativeInfinity;
+            MelMax = float.PositiveInfinity;
+            MelMin = float.NegativeInfinity;
+            BaselineThreshold = Constants.DefaultBaselineThreshold;
         }
 
         // Assumes inputs are valid. That is, 

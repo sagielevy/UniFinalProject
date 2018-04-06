@@ -12,7 +12,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
     {
         protected override IEnumerator Calibrate()
         {
-            float actualDist = 0;
+            float averageDist = 0;
 
             while (true)
             {
@@ -26,22 +26,24 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
 
                     case CalibrationStage.VolumeBaseLine:
                         VolumeStageTimeBased(ref volumeBaseLineValue);
-                        actualDist = volumeBaseLineValue - silence;
-                        InitPauseIfFinishedTimeBased(CalibrationStage.VolumeMin, actualDist, minVolumeDist + minSilenceDist);
+                        averageDist = volumeBaseLineValue - silence;
+                        InitPauseIfFinishedTimeBased(CalibrationStage.VolumeMin, averageDist, minVolumeDist + minSilenceDist);
                         //CalcCurrentDistancePercent();
                         break;
 
                     case CalibrationStage.VolumeMin:
-                        actualDist = volumeBaseLineValue - volumeMinValue;
-                        VolumeStageSampleBased(ref volumeMinValue, actualDist, minVolumeDist);
-                        InitPauseIfFinishedSampleBased(CalibrationStage.VolumeMax, actualDist, minVolumeDist);
+                        // Verify single sample distance
+                        VolumeStageSampleBased(ref volumeMinValue, volumeBaseLineValue - MicIn.DbValue, minVolumeDist);
+                        averageDist = volumeBaseLineValue - volumeMinValue;
+                        InitPauseIfFinishedSampleBased(CalibrationStage.VolumeMax, averageDist, minVolumeDist);
                         //CalcCurrentDistancePercent(actualDist, minVolumeDist);
                         break;
 
                     case CalibrationStage.VolumeMax:
-                        actualDist = volumeMaxValue - volumeBaseLineValue;
-                        VolumeStageSampleBased(ref volumeMaxValue, actualDist, minVolumeDist);
-                        InitPauseIfFinishedSampleBased(CalibrationStage.PitchBaseLine, actualDist, minVolumeDist);
+                        // Verify single sample distance
+                        VolumeStageSampleBased(ref volumeMaxValue, MicIn.DbValue - volumeBaseLineValue, minVolumeDist);
+                        averageDist = volumeMaxValue - volumeBaseLineValue;
+                        InitPauseIfFinishedSampleBased(CalibrationStage.PitchBaseLine, averageDist, minVolumeDist);
                         //CalcCurrentDistancePercent(actualDist, minVolumeDist);
                         break;
 
@@ -52,16 +54,18 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
                         break;
 
                     case CalibrationStage.PitchLow:
-                        actualDist = pitchBaseLineValue - pitchLowValue;
-                        PitchStageSampleBased(ref pitchLowValue, actualDist, minPitchDist);
-                        InitPauseIfFinishedTimeBased(CalibrationStage.PitchHigh, actualDist, minPitchDist);
+                        // Verify single sample distance
+                        PitchStageSampleBased(ref pitchLowValue, pitchBaseLineValue - MicIn.PitchValue, minPitchDist);
+                        averageDist = pitchBaseLineValue - pitchLowValue;
+                        InitPauseIfFinishedSampleBased(CalibrationStage.PitchHigh, averageDist, minPitchDist);
                         //CalcCurrentDistancePercent(actualDist, minPitchDist);
                         break;
 
                     case CalibrationStage.PitchHigh:
-                        actualDist = pitchHighValue - pitchBaseLineValue;
-                        PitchStageSampleBased(ref pitchHighValue, actualDist, minPitchDist);
-                        InitPauseIfFinishedTimeBased(CalibrationStage.Finished, actualDist, minPitchDist);
+                        // Verify single sample distance
+                        PitchStageSampleBased(ref pitchHighValue, MicIn.PitchValue - pitchBaseLineValue, minPitchDist);
+                        averageDist = pitchHighValue - pitchBaseLineValue;
+                        InitPauseIfFinishedSampleBased(CalibrationStage.Finished, averageDist, minPitchDist);
                         //CalcCurrentDistancePercent(actualDist, minPitchDist);
                         break;
 

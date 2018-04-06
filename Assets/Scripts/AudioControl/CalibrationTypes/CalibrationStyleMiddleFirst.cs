@@ -19,7 +19,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
                 {
                     case CalibrationStage.VolumeBaseLine:
                         VolumeStageTimeBased(ref volumeBaseLineValue);
-                        InitPauseIfFinishedTimeBased(CalibrationStage.VolumeMin);
+                        //InitPauseIfFinishedTimeBased(CalibrationStage.VolumeMin);
                         //CalcCurrentDistancePercent();
                         break;
 
@@ -28,7 +28,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
 
                         actualDist = volumeBaseLineValue - volumeMinValue;
 
-                        InitPauseIfFinishedTimeBased(CalibrationStage.VolumeMax, actualDist, minVolumeDist);
+                        //InitPauseIfFinishedTimeBased(CalibrationStage.VolumeMax, actualDist, minVolumeDist);
                         //CalcCurrentDistancePercent(actualDist, minVolumeDist);
                         break;
 
@@ -37,13 +37,13 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
 
                         actualDist = volumeMaxValue - volumeBaseLineValue;
 
-                        InitPauseIfFinishedTimeBased(CalibrationStage.PitchBaseLine, actualDist, minVolumeDist);
+                        //InitPauseIfFinishedTimeBased(CalibrationStage.PitchBaseLine, actualDist, minVolumeDist);
                         //CalcCurrentDistancePercent(actualDist, minVolumeDist);
                         break;
 
                     case CalibrationStage.PitchBaseLine:
                         PitchStageTimeBased(ref pitchBaseLineValue);
-                        InitPauseIfFinishedTimeBased(CalibrationStage.PitchLow);
+                        //InitPauseIfFinishedTimeBased(CalibrationStage.PitchLow);
                         //CalcCurrentDistancePercent();
                         break;
 
@@ -52,7 +52,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
 
                         actualDist = pitchBaseLineValue - pitchLowValue;
 
-                        InitPauseIfFinishedTimeBased(CalibrationStage.PitchHigh, actualDist, minPitchDist);
+                        //InitPauseIfFinishedTimeBased(CalibrationStage.PitchHigh, actualDist, minPitchDist);
                         //CalcCurrentDistancePercent(actualDist, minPitchDist);
                         break;
 
@@ -61,7 +61,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
 
                         actualDist = pitchHighValue - pitchBaseLineValue;
 
-                        InitPauseIfFinishedTimeBased(CalibrationStage.Finished, actualDist, minPitchDist);
+                        //InitPauseIfFinishedTimeBased(CalibrationStage.Finished, actualDist, minPitchDist);
                         //CalcCurrentDistancePercent(actualDist, minPitchDist);
                         break;
 

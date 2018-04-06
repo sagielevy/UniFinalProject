@@ -17,10 +17,9 @@ namespace Assets.Scripts.AudioControl.Core
         public float PitchValue { get; private set; }
         //public float MelValue { get; private set; }
 
-        //private static AudioMeasure instance;
         private AudioSource Audio;
         private string audioInputDevice;
-        private const int samplerate = 44100;
+        private const int micSampleRate = 44100;
         private const int QSamples = 1024;
         private const float RefValue = 0.1f;
         private const float Threshold = 0.002f;
@@ -71,25 +70,18 @@ namespace Assets.Scripts.AudioControl.Core
             }
         }
 
-        //private void Awake()
-        //{
-        //    if (instance == null)
-        //    {
-        //        instance = this;
-        //        DontDestroyOnLoad(gameObject);
-        //    }
-        //    else
-        //    {
-        //        // Only instance lives
-        //        Destroy(this.gameObject);
-        //    }
-        //}
-
         void Start()
         {
+            var orgConf = AudioSettings.GetConfiguration();
+
             AudioSettings.Reset(new AudioConfiguration
             {
-                sampleRate = samplerate
+                // Modify sample rate. Keep the rest the same
+                sampleRate = micSampleRate,
+                dspBufferSize = orgConf.dspBufferSize,
+                numRealVoices = orgConf.numRealVoices,
+                numVirtualVoices = orgConf.numVirtualVoices,
+                speakerMode = orgConf.speakerMode
             });
 
             _samples = new float[QSamples];

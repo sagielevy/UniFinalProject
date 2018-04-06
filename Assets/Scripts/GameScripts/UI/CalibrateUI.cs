@@ -41,28 +41,35 @@ namespace Assets.Scripts.GameScripts.UI
         public CalibrationInsturcted calibrator;
         public BallManagerTutorial ballManager;
         public AudioSource audioOutput;
+        public float fadeSpeed = 0.05f;
         private Text buttonText;
 
+        private Color orgColor;
         private bool hasBegun;
         private bool hasChangedStageOffsets;
         private Dictionary<CalibrationStage, StepData> stages;
         private IEnumerator handleCalibration;
+        private float startTime;
 
         private void Awake()
         {
             stages = new Dictionary<CalibrationStage, StepData>();
             stages[CalibrationStage.Silence] = new StepData(Silence, null, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), true, true, null);
-            stages[CalibrationStage.PitchLow] = new StepData(PitchLow, null, Resources.Load<AudioClip>("Mono"), Resources.Load<AudioClip>("test/Mono"), false, false, 
-                () => { ballManager.DbOffset = new OffsetsProfile(calibrator.volumeBaseLineValue, 0, calibrator.volumeMinValue, Constants.DefaultVolumeBaselineThreshold); ballManager.PitchOffset = new OffsetsProfile(); });
+            stages[CalibrationStage.PitchLow] = new StepData(PitchLow, null, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), false, false,
+                () => { ballManager.DbOffset = new OffsetsProfile(float.NaN, float.PositiveInfinity, calibrator.volumeMinValue, Constants.DefaultVolumeBaselineThreshold);
+                    ballManager.PitchOffset = new OffsetsProfile(calibrator.pitchBaseLineValue, float.PositiveInfinity, calibrator.pitchLowValue, Constants.DefaultPitchBaselineThreshold); });
             stages[CalibrationStage.PitchHigh] = new StepData(PitchHigh, null, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), false, false,
-                () => { ballManager.DbOffset = new OffsetsProfile(calibrator.volumeBaseLineValue, calibrator.volumeMaxValue, 0, Constants.DefaultVolumeBaselineThreshold); ballManager.PitchOffset = new OffsetsProfile(); });
+                () => { ballManager.DbOffset = new OffsetsProfile(float.NaN, float.PositiveInfinity, calibrator.volumeMinValue, Constants.DefaultVolumeBaselineThreshold);
+                    ballManager.PitchOffset = new OffsetsProfile(calibrator.pitchBaseLineValue, calibrator.pitchHighValue, float.NegativeInfinity, Constants.DefaultPitchBaselineThreshold); }); 
             stages[CalibrationStage.Finished] = new StepData(Finish, null, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), false, true, null);
             stages[CalibrationStage.PitchBaseLine] = new StepData(PitchBaseline, null, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), true, true, null);
             stages[CalibrationStage.VolumeBaseLine] = new StepData(VolumeBaseline, null, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), true, true, null);
             stages[CalibrationStage.VolumeMax] = new StepData(VolumeMax, null, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), false, false,
-                () => { ballManager.DbOffset = new OffsetsProfile(); ballManager.PitchOffset = new OffsetsProfile(calibrator.pitchBaseLineValue, 0, calibrator.pitchLowValue, Constants.DefaultPitchBaselineThreshold); });
+                () => { ballManager.DbOffset = new OffsetsProfile(calibrator.volumeBaseLineValue, calibrator.volumeMaxValue, float.NegativeInfinity, Constants.DefaultVolumeBaselineThreshold);
+                    ballManager.PitchOffset = new OffsetsProfile(); });
             stages[CalibrationStage.VolumeMin] = new StepData(VolumeMin, null, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), false, false,
-                () => { ballManager.DbOffset = new OffsetsProfile(); ballManager.PitchOffset = new OffsetsProfile(calibrator.pitchBaseLineValue, calibrator.pitchHighValue, 0, Constants.DefaultPitchBaselineThreshold); });
+                () => { ballManager.DbOffset = new OffsetsProfile(calibrator.volumeBaseLineValue, float.PositiveInfinity, calibrator.volumeMinValue, Constants.DefaultVolumeBaselineThreshold);
+                    ballManager.PitchOffset = new OffsetsProfile(); });
         }
 
         private void Start()
@@ -73,6 +80,9 @@ namespace Assets.Scripts.GameScripts.UI
             hasBegun = false;
 
             handleCalibration = HandleCalibration();
+
+            // Init onclick event
+            nextStageBtn.onClick.AddListener(() => { BeginProcess(); });
         }
 
         public void BeginProcess()
@@ -84,6 +94,16 @@ namespace Assets.Scripts.GameScripts.UI
             audioOutput.Play();
             nextStageBtn.onClick.RemoveAllListeners();
             nextStageBtn.onClick.AddListener(() => { ContinueProcess(); });
+            nextStageBtn.interactable = false;
+            StartCoroutine(WaitForSound(audioOutput));
+        }
+
+        private IEnumerator WaitForSound(AudioSource sound)
+        {
+            yield return new WaitUntil(() => !sound.isPlaying);
+
+            // Finally enable button
+            nextStageBtn.interactable = true;
         }
 
         public void ContinueProcess()
@@ -125,18 +145,6 @@ namespace Assets.Scripts.GameScripts.UI
                     progressBar.SetFillerSizeAsPercentage(calibrator.GetCurrentSamplePercent);
                 }
 
-                // Change fader correctly
-                if (newStage.isBlackScreen)
-                {
-                    //fader.BeginFade(Fading.FadeIn);
-                    panel.color = Color.Lerp(panel.color, new Color(panel.color.r, panel.color.g, panel.color.b, 1), Time.fixedDeltaTime);
-                }
-                else
-                {
-                    //fader.BeginFade(Fading.FadeOut);
-                    panel.color = Color.Lerp(panel.color, new Color(panel.color.r, panel.color.g, panel.color.b, 0), Time.fixedDeltaTime);
-                }
-
                 // Change offsets to allow certain ball movement
                 if (calibrator.CompletedRequiredSamples && !hasChangedStageOffsets)
                 {
@@ -155,6 +163,10 @@ namespace Assets.Scripts.GameScripts.UI
                     // Clear error message if exists
                     //ErrorMsg.text = "";
 
+                    // TODO add reset buttons and show them when necessary. Also manage their flow & shit
+                    startTime = Time.fixedTime;
+                    orgColor = panel.color;
+
                     // Init progress bar
                     progressBar.SetFillerSizeAsPercentage(0);
 
@@ -162,10 +174,6 @@ namespace Assets.Scripts.GameScripts.UI
                     ballManager.DbOffset = new OffsetsProfile();
                     ballManager.PitchOffset = new OffsetsProfile();
                     hasChangedStageOffsets = false;
-
-                    // Enable button for the player to continue
-                    nextStageBtn.interactable = true;
-                    buttonText.text = PressStartStep;
 
                     // There was a bad input previously
                     if (inputError)
@@ -187,6 +195,24 @@ namespace Assets.Scripts.GameScripts.UI
                         // Change text according to step
                         instructions.text = newStage.text;
                     }
+
+                    // Enable button for the player to continue when instruction is complete
+                    StartCoroutine(WaitForSound(audioOutput));
+
+                    // Change button text
+                    buttonText.text = PressStartStep;
+                }
+
+                // Change fader correctly
+                if (newStage.isBlackScreen)
+                {
+                    panel.color = Color.Lerp(orgColor, new Color(panel.color.r, panel.color.g, panel.color.b, 1),
+                        (Time.fixedTime - startTime) * fadeSpeed);
+                }
+                else
+                {
+                    panel.color = Color.Lerp(orgColor, new Color(panel.color.r, panel.color.g, panel.color.b, 0),
+                        (Time.fixedTime - startTime) * fadeSpeed);
                 }
 
                 yield return null;
@@ -218,7 +244,7 @@ namespace Assets.Scripts.GameScripts.UI
         public readonly bool isBlackScreen;
         public readonly Action createOffsets;
 
-        public StepData(string text, string onErrorText, AudioClip instruction, AudioClip onErrorInstruction, 
+        public StepData(string text, string onErrorText, AudioClip instruction, AudioClip onErrorInstruction,
             bool isTimeBasedSample, bool isBlackScreen, Action createOffsets)
         {
             this.text = text;

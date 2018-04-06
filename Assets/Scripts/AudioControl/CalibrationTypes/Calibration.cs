@@ -29,8 +29,8 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
         public OffsetsProfile PitchProfile { get; protected set; }
         //public float GetCurrentDistancePercent { get; private set; }
         public float GetCurrentTimePercent { get { return 100 * (Time.fixedTime - stageStartingTime) / sampleTimeOffset; } }
-        public float GetCurrentSamplePercent { get { return 100 * (numOfPrevSamples / requiredNumOfValidSamples); } }
-        public bool CompletedRequiredSamples { get { return numOfPrevSamples >= requiredNumOfValidSamples; } }
+        public float GetCurrentSamplePercent { get { return 100 * ((float)numOfPrevSamples / requiredNumOfValidSamplesSampleBased); } }
+        public bool CompletedRequiredSamples { get { return numOfPrevSamples >= requiredNumOfValidSamplesSampleBased; } }
         public float volumeBaseLineValue = 0;
         public float pitchBaseLineValue = 0;
         public float volumeMinValue = 0;
@@ -47,7 +47,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
 
         // TODO verify these distances!
         protected const float minVolumeDist = 4.2f;
-        protected const float minSilenceDist = 20;
+        protected const float minSilenceDist = 12;
         protected const float minPitchDist = 20;
         //protected const float pauseStageTime = 2.0f;
 
@@ -60,9 +60,9 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
         private IEnumerator calibrateProcess;
 
         // TODO verify these distances!
-        private const int requiredNumOfValidSamplesTimeBased = 5000;
-        private const int requiredNumOfValidSamples = 10000;
-        private const int maxNumOfValidSamples = 20000;
+        private const int requiredNumOfValidSamplesTimeBased = 3000;
+        private const int requiredNumOfValidSamplesSampleBased = 5000;
+        private const int maxNumOfValidSamples = 80000;
         private const float stageTimeoutSeconds = 60;
         private const float sampleTimeOffset = 3.0f;
         private const float finishStageTime = 3.0f;
@@ -136,28 +136,32 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
             }
         }
 
+        // Adds valid samples only. REQUIRES VALID SILENCE DATA!
         protected void VolumeStageSampleBased(ref float value, float valueBaselineDist, float minDistance)
         {
+            // First of all verify that sound is ABOVE silence
             // Add sample if timeout was not reached and sample is valid
-            if (Time.fixedTime - stageStartingTime < sampleTimeOffset &&
-                valueBaselineDist > minDistance)
+            if (Time.fixedTime - stageStartingTime < stageTimeoutSeconds &&
+                valueBaselineDist > minDistance &&
+                MicIn.DbValue > (silence + minSilenceDist))
             {
                 // Add up to max samples
                 numOfPrevSamples++;
 
                 // Not completed all required samples, include in calculation
-                if (numOfPrevSamples < requiredNumOfValidSamples)
+                if (numOfPrevSamples < requiredNumOfValidSamplesSampleBased)
                 {
                     value = RollingAverage(value, MicIn.DbValue);
                 }
             }
         }
 
+        // Adds valid samples only. REQUIRES VALID MIN VOLUME DATA!
         protected void PitchStageSampleBased(ref float value, float valueBaselineDist, float minDistance)
         {
             // Take sample if volume is above min dB
             // Add sample if timeout was not reached and sample is valid
-            if (Time.fixedTime - stageStartingTime < sampleTimeOffset &&
+            if (Time.fixedTime - stageStartingTime < stageTimeoutSeconds &&
                 valueBaselineDist > minDistance &&
                 MicIn.DbValue >= volumeMinValue)
             {
@@ -165,7 +169,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
                 numOfPrevSamples++;
 
                 // Not completed all required samples, include in calculation
-                if (numOfPrevSamples < requiredNumOfValidSamples)
+                if (numOfPrevSamples < requiredNumOfValidSamplesSampleBased)
                 {
                     value = RollingAverage(value, MicIn.PitchValue);
                 }
@@ -182,9 +186,6 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
         {
             if (Time.fixedTime - stageStartingTime > finishStageTime)
             {
-                numOfPrevSamples = 0;
-                continueProcess = false;
-
                 // If no need to validate or validate required and distance is valid,
                 // and number of total samples surpasses required samples for time based - move to next stage
                 if (valueBaselineDist >= minDistance && 
@@ -206,20 +207,23 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
                 {
                     StopCoroutine(calibrateProcess);
                 }
+
+                // Reset temp variables
+                numOfPrevSamples = 0;
+                continueProcess = false;
             }
         }
 
         protected void InitPauseIfFinishedSampleBased(CalibrationStage next, float valueBaselineDist, float minDistance)
         {
             // Finish if passed timeout or max samples has been reached
-            if (Time.fixedTime - stageStartingTime > finishStageTime ||
+            if (Time.fixedTime - stageStartingTime > stageTimeoutSeconds ||
                 numOfPrevSamples >= maxNumOfValidSamples)
             {
-                numOfPrevSamples = 0;
-                continueProcess = false;
-
                 // If no need to validate or validate required and distance is valid move to next stage
-                if (valueBaselineDist >= minDistance)
+                // Number of samples passed required thershold
+                if (valueBaselineDist >= minDistance &&
+                    numOfPrevSamples >= requiredNumOfValidSamplesSampleBased)
                 {
                     currentStage = next;
                 }
@@ -236,30 +240,12 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
                 {
                     StopCoroutine(calibrateProcess);
                 }
+
+                // Reset temp variables
+                numOfPrevSamples = 0;
+                continueProcess = false;
             }
         }
-
-        //protected void CalcCurrentDistancePercent()
-        //{
-        //    CalcCurrentDistancePercent(0, 0);
-        //}
-
-        /// <summary>
-        /// Returns the current distance from the required threshold 
-        /// </summary>
-        /// <returns></returns>
-        //protected void CalcCurrentDistancePercent(float valueBaselineDist, float minDistance)
-        //{
-        //    // Ignore no distance - just put 100%
-        //    if (minDistance <= 0)
-        //    {
-        //        GetCurrentDistancePercent = 100;
-        //    }
-        //    else
-        //    {
-        //        GetCurrentDistancePercent = (valueBaselineDist / minDistance) * 100;
-        //    }
-        //}
         #endregion
 
         #region private methods

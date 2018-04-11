@@ -37,6 +37,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
         public float volumeMaxValue = 0;
         public float pitchLowValue = 0;
         public float pitchHighValue = 0;
+        public bool SampleStageCompleted { get; set; }
         #endregion
 
         #region protected members
@@ -218,7 +219,8 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
         {
             // Finish if passed timeout or max samples has been reached
             if (Time.fixedTime - stageStartingTime > stageTimeoutSeconds ||
-                numOfPrevSamples >= maxNumOfValidSamples)
+                numOfPrevSamples >= maxNumOfValidSamples ||
+                SampleStageCompleted)
             {
                 // If no need to validate or validate required and distance is valid move to next stage
                 // Number of samples passed required thershold
@@ -242,6 +244,7 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
                 }
 
                 // Reset temp variables
+                SampleStageCompleted = false;
                 numOfPrevSamples = 0;
                 continueProcess = false;
             }

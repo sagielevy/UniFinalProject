@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.AudioControl;
+using Assets.Scripts.AudioControl.CalibrationTypes;
 using Assets.Scripts.AudioControl.Core;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace Assets.Scripts.GameScripts
         public float drag = 0;
         public float angularDrag = 0.05f;
         public Vector3 initialPosition;
+        public CalibrationInsturcted calibrationInsturcted;
         public OffsetsProfile PitchOffset { get { return pitchOffset; }
             set { pitchOffset = value; PitchControl = new PitchControl(pitchOffset); LevelRestart(); } }
         public OffsetsProfile DbOffset { get { return dbOffset; }
@@ -58,6 +60,15 @@ namespace Assets.Scripts.GameScripts
             body.position = initialPosition;
             body.velocity = Vector3.zero;
             body.angularVelocity = Vector3.zero;
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            // If reached the finish line
+            if (collision.transform.CompareTag("Finish"))
+            {
+                calibrationInsturcted.SampleStageCompleted = true;
+            }
         }
     }
 }

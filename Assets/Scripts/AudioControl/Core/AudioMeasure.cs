@@ -105,10 +105,11 @@ namespace Assets.Scripts.AudioControl.Core
 
         void AnalyzeSound()
         {
+            int latency;
             // Wait until the recording has started. Should clear delay
-            while (!(Microphone.GetPosition(audioInputDevice) > 0)) { }
+            while (!((latency = Microphone.GetPosition(audioInputDevice)) > 0)) { }
 
-            GetComponent<AudioSource>().GetSpectrumData(_spectrum, 0, FFTWindow.BlackmanHarris);
+            Audio.GetSpectrumData(_spectrum, 0, FFTWindow.BlackmanHarris);
             ValueAndIndex[] samplesAndIndices = new ValueAndIndex[QSamples];
 
             for (int i = 0; i < QSamples; i++)
@@ -213,8 +214,8 @@ namespace Assets.Scripts.AudioControl.Core
 
         private void CalcRmsAndDb(int[] harmonicIndices)
         {
-            // fill array with samples
-            GetComponent<AudioSource>().GetOutputData(_samples, 0);
+            // Fill array with samples
+            Audio.GetOutputData(_samples, 0);
             float sum = 0;
 
             for (int i = 0; i < QSamples; i++)

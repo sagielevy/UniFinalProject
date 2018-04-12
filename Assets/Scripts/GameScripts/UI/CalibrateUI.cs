@@ -57,7 +57,6 @@ namespace Assets.Scripts.GameScripts.UI
         private const string Finish = "Calibrating complete!";
 
         public Text instructions;
-        //public Text ErrorMsg;
         public Button nextStageBtn;
         public ProgressBarBehaviour progressBar;
         public Image panel;
@@ -79,8 +78,8 @@ namespace Assets.Scripts.GameScripts.UI
         private void Awake()
         {
             stages = new Dictionary<CalibrationStage, StepData>();
-            stages[CalibrationStage.Silence] = new StepData(Silence_Start, Silence_Fail, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), CalibrationStage.Silence, Resources.Load<AudioClip>("test/Mono"), true, true, null);
-            stages[CalibrationStage.PitchLow] = new StepData(PitchLow_Start, PitchLow_Fail, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), CalibrationStage.PitchLow, Resources.Load<AudioClip>("test/Mono"), false, false,
+            stages[CalibrationStage.Silence] = new StepData(Silence_Start, Silence_Fail, Resources.Load<AudioClip>("Instructions/silence_start"), Resources.Load<AudioClip>("Instructions/silence_fail"), CalibrationStage.Silence, null, true, true, null);
+            stages[CalibrationStage.PitchLow] = new StepData(PitchLow_Start, PitchLow_Fail, Resources.Load<AudioClip>("Instructions/pitchlow_start"), Resources.Load<AudioClip>("Instructions/pitchlow_fail"), CalibrationStage.PitchLow, Resources.Load<AudioClip>("Instructions/pitchlow_cmd"), false, false,
                 (step) =>
                 {
                     // Play command instruction and set correct board
@@ -90,7 +89,7 @@ namespace Assets.Scripts.GameScripts.UI
                     ballManager.DbOffset = new OffsetsProfile(float.NaN, float.PositiveInfinity, calibrator.volumeMinValue, Constants.DefaultVolumeBaselineThreshold);
                     ballManager.PitchOffset = new OffsetsProfile(calibrator.pitchBaseLineValue, float.PositiveInfinity, calibrator.pitchLowValue, Constants.DefaultPitchBaselineThreshold);
                 });
-            stages[CalibrationStage.PitchHigh] = new StepData(PitchHigh_Start, PitchHigh_Fail, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), CalibrationStage.PitchHigh, Resources.Load<AudioClip>("test/Mono"), false, false,
+            stages[CalibrationStage.PitchHigh] = new StepData(PitchHigh_Start, PitchHigh_Fail, Resources.Load<AudioClip>("Instructions/pitchhigh_start"), Resources.Load<AudioClip>("Instructions/pitchhigh_fail"), CalibrationStage.PitchHigh, Resources.Load<AudioClip>("Instructions/pitchhigh_cmd"), false, false,
                 (step) =>
                 {
                     audioOutput.clip = step.onSamplingComplete;
@@ -99,10 +98,10 @@ namespace Assets.Scripts.GameScripts.UI
                     ballManager.DbOffset = new OffsetsProfile(float.NaN, float.PositiveInfinity, calibrator.volumeMinValue, Constants.DefaultVolumeBaselineThreshold);
                     ballManager.PitchOffset = new OffsetsProfile(calibrator.pitchBaseLineValue, calibrator.pitchHighValue, float.NegativeInfinity, Constants.DefaultPitchBaselineThreshold);
                 });
-            stages[CalibrationStage.Finished] = new StepData(Finish, null, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), CalibrationStage.Finished, Resources.Load<AudioClip>("test/Mono"), false, true, null);
-            stages[CalibrationStage.PitchBaseLine] = new StepData(PitchBaseline_Start, PitchBaseline_Fail, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), CalibrationStage.PitchBaseLine, Resources.Load<AudioClip>("test/Mono"), true, true, null);
-            stages[CalibrationStage.VolumeBaseLine] = new StepData(VolumeBaseline_Start, VolumeBaseline_Fail, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), CalibrationStage.VolumeBaseLine, Resources.Load<AudioClip>("test/Mono"), true, true, null);
-            stages[CalibrationStage.VolumeMax] = new StepData(VolumeMax_Start, VolumeMax_Fail, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), CalibrationStage.VolumeMax, Resources.Load<AudioClip>("test/Mono"), false, false,
+            stages[CalibrationStage.Finished] = new StepData(Finish, null, Resources.Load<AudioClip>("Instructions/Mono"), null, CalibrationStage.Finished, null, false, true, null);
+            stages[CalibrationStage.PitchBaseLine] = new StepData(PitchBaseline_Start, PitchBaseline_Fail, Resources.Load<AudioClip>("Instructions/pitchbase_start"), Resources.Load<AudioClip>("Instructions/pitchbase_fail"), CalibrationStage.PitchBaseLine, null, true, true, null);
+            stages[CalibrationStage.VolumeBaseLine] = new StepData(VolumeBaseline_Start, VolumeBaseline_Fail, Resources.Load<AudioClip>("Instructions/volbase_start"), Resources.Load<AudioClip>("Instructions/volbase_fail"), CalibrationStage.VolumeBaseLine, null, true, true, null);
+            stages[CalibrationStage.VolumeMax] = new StepData(VolumeMax_Start, VolumeMax_Fail, Resources.Load<AudioClip>("Instructions/volmax_start"), Resources.Load<AudioClip>("Instructions/volmax_fail"), CalibrationStage.VolumeMax, Resources.Load<AudioClip>("Instructions/volmax_cmd"), false, false,
                 (step) =>
                 {
                     audioOutput.clip = step.onSamplingComplete;
@@ -111,7 +110,7 @@ namespace Assets.Scripts.GameScripts.UI
                     ballManager.DbOffset = new OffsetsProfile(calibrator.volumeBaseLineValue, calibrator.volumeMaxValue, float.NegativeInfinity, Constants.DefaultVolumeBaselineThreshold);
                     ballManager.PitchOffset = new OffsetsProfile();
                 });
-            stages[CalibrationStage.VolumeMin] = new StepData(VolumeMin_Start, VolumeMin_Fail, Resources.Load<AudioClip>("test/Mono"), Resources.Load<AudioClip>("test/Mono"), CalibrationStage.VolumeMin, Resources.Load<AudioClip>("test/Mono"), false, false,
+            stages[CalibrationStage.VolumeMin] = new StepData(VolumeMin_Start, VolumeMin_Fail, Resources.Load<AudioClip>("Instructions/volmin_start"), Resources.Load<AudioClip>("Instructions/volmin_fail"), CalibrationStage.VolumeMin, Resources.Load<AudioClip>("Instructions/volmin_cmd"), false, false,
                 (step) =>
                 {
                     audioOutput.clip = step.onSamplingComplete;
@@ -195,11 +194,17 @@ namespace Assets.Scripts.GameScripts.UI
 
                 if (newStage.isTimeBasedSample)
                 {
+                    // For first time use, activate bar
+                    progressBar.gameObject.SetActive(true);
+
                     // Update bar according to time since start
                     progressBar.SetFillerSizeAsPercentage(calibrator.GetCurrentTimePercent);
                 }
                 else
                 {
+                    // For first time use, activate bar
+                    progressBar.gameObject.SetActive(true);
+
                     // Update bar according to number of good samples taken / max samples
                     progressBar.SetFillerSizeAsPercentage(calibrator.GetCurrentSamplePercent);
                 }
@@ -219,9 +224,6 @@ namespace Assets.Scripts.GameScripts.UI
                 // Stage change or error recieved!
                 if (newStage.stage != currentStage || (inputError = calibrator.IsInputStageInvalid()))
                 {
-                    // Clear error message if exists
-                    //ErrorMsg.text = "";
-
                     // TODO add reset buttons and show them when necessary. Also manage their flow & shit
                     startTime = Time.fixedTime;
                     orgColor = panel.color;
@@ -243,7 +245,6 @@ namespace Assets.Scripts.GameScripts.UI
 
                         // Change text according to step
                         instructions.text = newStage.onErrorText;
-                        //ErrorMsg.text = ErrorBadInput;
                     }
                     else
                     {
@@ -311,6 +312,16 @@ namespace Assets.Scripts.GameScripts.UI
 
             // Load the first level
             SceneManager.LoadScene(Constants.FirstLevelSceneBuildIndex);
+        }
+
+        private void OnGUI()
+        {
+            // Pressed enter and name input is in focus
+            if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)) &&
+                nextStageBtn.interactable)
+            {
+                nextStageBtn.onClick.Invoke();
+            }
         }
     }
 

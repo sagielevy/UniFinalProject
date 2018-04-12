@@ -17,7 +17,6 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
         PitchBaseLine,
         PitchLow,
         PitchHigh,
-        //Pause,
         Finished
     }
 
@@ -63,7 +62,6 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
         // TODO verify these distances!
         private const int requiredNumOfValidSamplesTimeBased = 3000;
         private const int requiredNumOfValidSamplesSampleBased = 5000;
-        private const int maxNumOfValidSamples = 80000;
         private const float stageTimeoutSeconds = 60;
         private const float sampleTimeOffset = 3.0f;
         private const float finishStageTime = 3.0f;
@@ -219,7 +217,6 @@ namespace Assets.Scripts.AudioControl.CalibrationTypes
         {
             // Finish if passed timeout or max samples has been reached
             if (Time.fixedTime - stageStartingTime > stageTimeoutSeconds ||
-                numOfPrevSamples >= maxNumOfValidSamples ||
                 SampleStageCompleted)
             {
                 // If no need to validate or validate required and distance is valid move to next stage

@@ -17,19 +17,10 @@ namespace Assets.Scripts.GameScripts.UI
         public Button StartNewGame;
         public ScrollRect ScrollView;
 
-        // For debug, use different calibration.
-        Dictionary<int, Type> CalibrationTypes;
-
         private void Start()
         {
             StartNewGame.interactable = false;
             LoadPlayerNames();
-
-            // Set calibration types
-            CalibrationTypes = new Dictionary<int, Type>();
-            CalibrationTypes[0] = typeof(CalibrationStyleMiddleFirst);
-            CalibrationTypes[1] = typeof(CalibrationStyleLowFirst);
-            DataBetweenScenes.calibration = CalibrationTypes[0]; // Default val
         }
 
         public void LoadPlayerNames()
@@ -74,9 +65,15 @@ namespace Assets.Scripts.GameScripts.UI
             SceneManager.LoadScene("Calibrate");
         }
 
-        public void OnCalibrationChaned(int value)
+        private void OnGUI()
         {
-            DataBetweenScenes.calibration = CalibrationTypes[value];
+            // Pressed enter and name input is in focus
+            if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)) &&
+                playerNameInput.isFocused)
+            {
+                // Simulate pressing start button
+                StartNewGame.onClick.Invoke();
+            }
         }
     }
 }

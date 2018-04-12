@@ -9,6 +9,5 @@ namespace Assets.Scripts
     public static class DataBetweenScenes
     {
         public static string PlayerNameInput;
-        public static Type calibration;
     }
 }

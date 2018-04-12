@@ -116,7 +116,7 @@ MonoBehaviour:
   forceScale: 1.5
   maxVelocity: 6
   levelFloorY: -5
-  drag: 0.4
+  drag: 0.5
   angularDrag: 0.05
   initialPosition: {x: 0, y: 0, z: 0}
 --- !u!135 &135357055220089142

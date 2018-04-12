@@ -16,40 +16,38 @@ namespace Assets.Scripts.GameScripts.UI
     public class CalibrateUI : MonoBehaviour
     {
         private const string Welcome = "Start calibrating by pressing the green button.";
-        private const string Silence_Start = "Before beginning a new game, we need to know how your unique voice works.\n" +
-                                             "First let's start by recording the level of noise in your area.\n" +
+        private const string Silence_Start = "First we need to record the level of noise in your area.\n" +
                                              "Please make sure it's as quite as possible around you and when you're ready to record, press the record button.";
         private const string Silence_Fail = "It seems that it is too loud around you.\n" +
                                             "Please make sure it's as quite as possible around you and when you're ready to record, press the record button.";
-        private const string VolumeBaseline_Start = "The first aspect of your voice is your volume.\n" +
-                                                    "Let's hear your normal speaking volume. When you're ready to begin, press the record button and\n" +
-                                                    "make an 'aaaaah' sound with your normal speaking volume for a few seconds, like this: 'aaaaaaah'...";
+        private const string VolumeBaseline_Start = "Now we need to know how your unique voice works.\n" +
+                                                    "The first aspect of your voice is your volume.\n" +
+                                                    "When you're ready to begin, press the record button and\n" +
+                                                    "make a sound with your normal speaking volume for a few seconds, like this: 'aaaaaaah'...";
         private const string VolumeBaseline_Fail = "It seems that your volume was to soft, your microphone was too far away, its sensitivity was too low\n" +
-                                                   "or your area is too noisy.Try again or re-record area silence.\n" +
-                                                   "Press the record button and make an 'aaaaah' sound with your normal speaking volume for a few seconds, like this: 'aaaaaaah'...";
-        private const string VolumeMin_Start = "Perfect. Now let's try moving in the other direction. Make a soft 'aaaaaaah' to move backwards.\n" +
+                                                   "or your area is too noisy. Try again or re-record area silence.\n" +
+                                                   "Press the record button and make a sound with your normal speaking volume for a few seconds, like this: 'aaaaaaah'...";
+        private const string VolumeMin_Start = "Great! Now for some fun.. Make a soft sound to move the ball backwards.\n" +
                                                "Try being as quite as you can, like so: 'aaaaaaah'...";
         private const string VolumeMin_Fail = "It seems you're having difficulties with this step. Try speaking farther from your microphone or\n" +
                                               "restart this step altogether.";
         private const string VolumeMin_Command = "Now move backwards!";
-        private const string VolumeMax_Start = "Great! Now for some fun.. Make a loud 'aaaaaaah' sound to move the ball forwards but don't go overboard and hurt your throat.\n" +
+        private const string VolumeMax_Start = "Perfect. Now let's try moving in the other direction. Make a loud sound to move the ball forwards but don't go overboard and hurt your throat.\n" +
                                                "Say something like this: 'aaaaaaah'...";
         private const string VolumeMax_Fail = "It seems you're having difficulties with this step. Try speaking closer to your microphone, increase sensitivity or\n" +
                                               "restart this step and reset your normal volume.";
         private const string VolumeMax_Command = "Now move fowards!";
-        private const string PitchBaseline_Start = "The other aspect of your voice is your tone. You can make sounds in low a tone like so: 'aaaaaaah', or a high tone: 'aaaaaaah'.\n" +
-                                                   "But first we need your normal, speaking, tone. When you're ready to begin, press the record button and\n" +
-                                                   "make an 'aaaaah' sound with your normal speaking tone for a few seconds, like this: 'aaaaaaah'...";
+        private const string PitchBaseline_Start = "The other aspect of your voice is your tone. You can make sounds in a low tone like so: 'aaaaaaah', or a high tone: 'aaaaaaah'.\n" +
+                                                   "But first we need your normal speaking tone. Try something like this: 'aaaaaaah'...";
         private const string PitchBaseline_Fail = "It seems you were too quite. Try speaking closer to your microphone.\n" +
-                                                  "When you're ready to begin, press the record button and\n" +
-                                                  "make an 'aaaaah' sound with your normal speaking tone for a few seconds, like this: 'aaaaaaah'...";
+                                                  "Make a sound with your normal speaking tone, like this: 'aaaaaaah'...";
         private const string PitchLow_Start = "Awesome. Make a low tone 'aaaaaaah' sound to move the ball left. Try it.";
         private const string PitchLow_Fail = "It seems you're having difficulties with this step. Try speaking closer to your microphone, lower your tone even more,\n" +
-                                             "or restart this step and reset your normal tone.Make a low tone 'aaaaaaah' sound to move the ball left.";
+                                             "or restart this step and reset your normal tone. Make a low tone 'aaaaaaah' sound to move the ball left.";
         private const string PitchLow_Command = "Now move left!";
         private const string PitchHigh_Start = "OK now make a high tone 'aaaaaaah' to move the ball right. Go ahead.";
         private const string PitchHigh_Fail = "It seems you're having difficulties with this step. Try speaking closer to your microphone, increase your tone even more,\n" +
-                                              "or restart this step altogether.Make a high tone 'aaaaaaah' sound to move the ball right.";
+                                              "or restart this step altogether. Make a high tone 'aaaaaaah' sound to move the ball right.";
         private const string PitchHigh_Command = "Now move right!";
         private const string PressToBegin = "Press to begin";
         private const string PressStartStep = "Press to start this step";

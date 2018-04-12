@@ -55,6 +55,7 @@ namespace Assets.Scripts.GameScripts.UI
         private const string Finish = "Calibrating complete!";
 
         public Text instructions;
+        public Text skipInstructions;
         public Button nextStageBtn;
         public ProgressBarBehaviour progressBar;
         public Image panel;
@@ -156,7 +157,13 @@ namespace Assets.Scripts.GameScripts.UI
 
         private IEnumerator WaitForSound(AudioSource sound)
         {
+            // Show skip instruction
+            skipInstructions.gameObject.SetActive(true);
+
             yield return new WaitUntil(() => !sound.isPlaying);
+
+            // Hide skip instruction
+            skipInstructions.gameObject.SetActive(false);
 
             // Finally enable button
             nextStageBtn.interactable = true;
@@ -319,6 +326,12 @@ namespace Assets.Scripts.GameScripts.UI
                 nextStageBtn.interactable)
             {
                 nextStageBtn.onClick.Invoke();
+            }
+
+            // Skip instruction if one is being given
+            if (Input.GetKeyDown(KeyCode.Space) && audioOutput.isPlaying)
+            {
+                audioOutput.Stop();
             }
         }
     }

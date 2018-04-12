@@ -2867,7 +2867,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: 
 --- !u!222 &900600047
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3798,8 +3798,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 55.641, y: 241.9}
-  m_SizeDelta: {x: 186.7, y: 70.9}
+  m_AnchoredPosition: {x: 22.5, y: 239.5}
+  m_SizeDelta: {x: 77.2, y: 70.9}
   m_Pivot: {x: 0.79266804, y: 2.9013834}
 --- !u!114 &1065258788
 MonoBehaviour:
@@ -3820,9 +3820,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.033289578, g: 0.5294118, b: 0.01557095, a: 1}
-    m_HighlightedColor: {r: 0.009731844, g: 0.66176474, b: 0.04120935, a: 1}
-    m_PressedColor: {r: 0.032709785, g: 0.4044118, b: 0.05065405, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.6838235, g: 0.6838235, b: 0.6838235, a: 1}
+    m_PressedColor: {r: 0.3455882, g: 0.3455882, b: 0.3455882, a: 1}
     m_DisabledColor: {r: 0.47794116, g: 0.03514274, b: 0.03514274, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -3861,9 +3861,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 21300000, guid: 896e10fe04a6be7419ee73787973db62, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -3916,10 +3916,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instructions: {fileID: 769320881}
-  skipInstructions: {fileID: 1379738947}
   nextStageBtn: {fileID: 1065258788}
   progressBar: {fileID: 55538384}
+  buttonImage: {fileID: 1065258789}
   panel: {fileID: 1697182833}
+  skip: {fileID: 21300000, guid: 822ffa6eb54b24e47b4e49cb64918111, type: 3}
+  record: {fileID: 21300000, guid: a816695ef8859054f8b859768fe445e1, type: 3}
   calibrator: {fileID: 853876961}
   ballManager: {fileID: 794969766}
   audioOutput: {fileID: 1927959283}
@@ -5695,7 +5697,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22423010, guid: 02e917cf5b02271479631cc13cb38c5f, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 140.5
+      value: 159.5
       objectReference: {fileID: 0}
     - target: {fileID: 22423010, guid: 02e917cf5b02271479631cc13cb38c5f, type: 2}
       propertyPath: m_SizeDelta.x

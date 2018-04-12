@@ -55,16 +55,16 @@ namespace Assets.Scripts.GameScripts.UI
         private const string Finish = "Calibrating complete!";
 
         public Text instructions;
-        public Text skipInstructions;
         public Button nextStageBtn;
         public ProgressBarBehaviour progressBar;
+        public Image buttonImage;
         public Image panel;
+        public Sprite skip, record;
         public CalibrationInsturcted calibrator;
         public BallManagerTutorial ballManager;
         public AudioSource audioOutput;
         public float fadeSpeed = 0.05f;
         public GameObject boardTop, boardBottom, boardLeft, boardRight;
-        private Text buttonText;
 
         private Color orgColor;
         private bool hasBegun;
@@ -132,8 +132,6 @@ namespace Assets.Scripts.GameScripts.UI
         private void Start()
         {
             instructions.text = Welcome;
-            buttonText = nextStageBtn.GetComponentInChildren<Text>();
-            buttonText.text = PressToBegin;
             hasBegun = false;
 
             handleCalibration = HandleCalibration();
@@ -145,28 +143,39 @@ namespace Assets.Scripts.GameScripts.UI
         public void BeginProcess()
         {
             // Change to first step
-            buttonText.text = PressStartStep;
+            buttonImage.sprite = skip;
             instructions.text = stages[calibrator.GetCurrentStage()].text;
             audioOutput.clip = stages[calibrator.GetCurrentStage()].instruction;
             audioOutput.Play();
-            nextStageBtn.onClick.RemoveAllListeners();
-            nextStageBtn.onClick.AddListener(() => { ContinueProcess(); });
-            nextStageBtn.interactable = false;
-            StartCoroutine(WaitForSound(audioOutput));
+            StartCoroutine(WaitForAudioInstruction(audioOutput));
         }
 
-        private IEnumerator WaitForSound(AudioSource sound)
+        private IEnumerator WaitForAudioInstruction(AudioSource sound)
         {
-            // Show skip instruction
-            skipInstructions.gameObject.SetActive(true);
+            // Enable button to allow skipping
+            nextStageBtn.interactable = true;
+
+            buttonImage.sprite = skip;
+
+            // Change event to skip instruction
+            nextStageBtn.onClick.RemoveAllListeners();
+            nextStageBtn.onClick.AddListener(() => { SkipInstruction(); });
 
             yield return new WaitUntil(() => !sound.isPlaying);
 
-            // Hide skip instruction
-            skipInstructions.gameObject.SetActive(false);
+            // Now show record button
+            buttonImage.sprite = record;
 
-            // Finally enable button
-            nextStageBtn.interactable = true;
+            // Change click event
+            nextStageBtn.onClick.RemoveAllListeners();
+            nextStageBtn.onClick.AddListener(() => { ContinueProcess(); });
+        }
+
+        private void SkipInstruction()
+        {
+            audioOutput.Stop();
+            nextStageBtn.onClick.RemoveAllListeners();
+            nextStageBtn.onClick.AddListener(() => { ContinueProcess(); });
         }
 
         public void ContinueProcess()
@@ -174,7 +183,6 @@ namespace Assets.Scripts.GameScripts.UI
             hasBegun = true;
             calibrator.ContinueCalibrating();
             nextStageBtn.interactable = false;
-            buttonText.text = PressDisabled;
         }
 
         public void RestartCalibrationUI()
@@ -229,7 +237,7 @@ namespace Assets.Scripts.GameScripts.UI
                 // Stage change or error recieved!
                 if (newStage.stage != currentStage || (inputError = calibrator.IsInputStageInvalid()))
                 {
-                    // TODO add reset buttons and show them when necessary. Also manage their flow & shit
+                    // TODO add reset buttons and show them when necessary. Also manage their flow & shit. A TIMELINE??
                     startTime = Time.fixedTime;
                     orgColor = panel.color;
 
@@ -279,14 +287,10 @@ namespace Assets.Scripts.GameScripts.UI
                                 ChangeBoard(boardLeft);
                                 break;
                         }
-                        
                     }
 
                     // Enable button for the player to continue when instruction is complete
-                    StartCoroutine(WaitForSound(audioOutput));
-
-                    // Change button text
-                    buttonText.text = PressStartStep;
+                    StartCoroutine(WaitForAudioInstruction(audioOutput));
                 }
 
                 // Change fader correctly
@@ -326,12 +330,6 @@ namespace Assets.Scripts.GameScripts.UI
                 nextStageBtn.interactable)
             {
                 nextStageBtn.onClick.Invoke();
-            }
-
-            // Skip instruction if one is being given
-            if (Input.GetKeyDown(KeyCode.Space) && audioOutput.isPlaying)
-            {
-                audioOutput.Stop();
             }
         }
     }

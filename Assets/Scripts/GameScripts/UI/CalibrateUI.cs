@@ -74,6 +74,7 @@ namespace Assets.Scripts.GameScripts.UI
         private Dictionary<CalibrationStage, StepData> stages;
         private IEnumerator handleCalibration;
         private float startTime;
+        private CalibrationStage currentStage = CalibrationStage.Silence;
 
         private void Awake()
         {
@@ -84,8 +85,8 @@ namespace Assets.Scripts.GameScripts.UI
                 {
                     // Play command instruction and set correct board
                     audioOutput.clip = step.onSamplingComplete;
-                    ChangeBoard(boardLeft);
-                    //instructions.text = PitchLow_Command;
+                    audioOutput.Play();
+                    instructions.text = PitchLow_Command;
                     ballManager.DbOffset = new OffsetsProfile(float.NaN, float.PositiveInfinity, calibrator.volumeMinValue, Constants.DefaultVolumeBaselineThreshold);
                     ballManager.PitchOffset = new OffsetsProfile(calibrator.pitchBaseLineValue, float.PositiveInfinity, calibrator.pitchLowValue, Constants.DefaultPitchBaselineThreshold);
                 });
@@ -93,8 +94,8 @@ namespace Assets.Scripts.GameScripts.UI
                 (step) =>
                 {
                     audioOutput.clip = step.onSamplingComplete;
-                    ChangeBoard(boardRight);
-                    //instructions.text = PitchHigh_Command;
+                    audioOutput.Play();
+                    instructions.text = PitchHigh_Command;
                     ballManager.DbOffset = new OffsetsProfile(float.NaN, float.PositiveInfinity, calibrator.volumeMinValue, Constants.DefaultVolumeBaselineThreshold);
                     ballManager.PitchOffset = new OffsetsProfile(calibrator.pitchBaseLineValue, calibrator.pitchHighValue, float.NegativeInfinity, Constants.DefaultPitchBaselineThreshold);
                 });
@@ -105,8 +106,8 @@ namespace Assets.Scripts.GameScripts.UI
                 (step) =>
                 {
                     audioOutput.clip = step.onSamplingComplete;
-                    ChangeBoard(boardTop);
-                    //instructions.text = VolumeMax_Command;
+                    audioOutput.Play();
+                    instructions.text = VolumeMax_Command;
                     ballManager.DbOffset = new OffsetsProfile(calibrator.volumeBaseLineValue, calibrator.volumeMaxValue, float.NegativeInfinity, Constants.DefaultVolumeBaselineThreshold);
                     ballManager.PitchOffset = new OffsetsProfile();
                 });
@@ -114,8 +115,8 @@ namespace Assets.Scripts.GameScripts.UI
                 (step) =>
                 {
                     audioOutput.clip = step.onSamplingComplete;
-                    ChangeBoard(boardBottom);
-                    //instructions.text = VolumeMin_Command;
+                    audioOutput.Play();
+                    instructions.text = VolumeMin_Command;
                     ballManager.DbOffset = new OffsetsProfile(calibrator.volumeBaseLineValue, float.PositiveInfinity, calibrator.volumeMinValue, Constants.DefaultVolumeBaselineThreshold);
                     ballManager.PitchOffset = new OffsetsProfile();
                 });
@@ -216,7 +217,7 @@ namespace Assets.Scripts.GameScripts.UI
                 }
 
                 // Stage change or error recieved!
-                if (newStage.text != instructions.text || (inputError = calibrator.IsInputStageInvalid()))
+                if (newStage.stage != currentStage || (inputError = calibrator.IsInputStageInvalid()))
                 {
                     // Clear error message if exists
                     //ErrorMsg.text = "";
@@ -252,6 +253,9 @@ namespace Assets.Scripts.GameScripts.UI
 
                         // Change text according to step
                         instructions.text = newStage.text;
+
+                        // Change stage
+                        currentStage = newStage.stage;
 
                         // Change board according to direction
                         switch (newStage.stage)

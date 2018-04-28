@@ -13,9 +13,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Background
+  - Shadow
+  - Ball
   - 
   - 
   - 
@@ -40,4 +40,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Board
+    uniqueID: 4227168373
+    locked: 0
+  - name: Shadow
+    uniqueID: 1280443515
+    locked: 0
+  - name: Ball
+    uniqueID: 569250765
     locked: 0

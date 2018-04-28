@@ -30,6 +30,24 @@ namespace Assets.Scripts.AudioControl.Core
         float[] _samples;
         private float[] _spectrum;
 
+        #region Elements
+        //public Text TextStatus;
+        //public Dropdown DropDownMicrophone;
+        //public Button ButtonRecord;
+
+        //private Text ButtonText;
+        //private AudioSource audioSource;
+        //private List<string> ListDevice;
+        //private int selectedDevice = 0;
+
+        [Tooltip("Seconds of input that will be buffered. Too short = lost data")]
+        public int micRecordLength = 1;
+        [Tooltip("Seconds until mic input is played through audio source. Too short = artifacts")]
+        public float latencyBuffer = 0.001f;
+        [Tooltip("Max latency allowed. If this value is too small the mic will constantly restart!")]
+        public float maxLatencySeconds = 0.03f;
+        #endregion
+
         private struct ValueAndIndex : IComparable<ValueAndIndex>
         {
             public readonly float value;
@@ -90,24 +108,17 @@ namespace Assets.Scripts.AudioControl.Core
             Audio = GetComponent<AudioSource>();
 
             audioInputDevice = Microphone.devices[0];
-
-            Audio.clip = Microphone.Start(audioInputDevice, true, 10, AudioSettings.outputSampleRate);
-            Audio.loop = true; // Set the AudioClip to loop
-
-            while (!(Microphone.GetPosition(audioInputDevice) > 0)) { } // Wait until the recording has started
-            Audio.Play(); // Play the audio source!
+            IsRecording = true;
         }
 
         void FixedUpdate()
         {
+            HandleLatency();
             AnalyzeSound();
         }
 
         void AnalyzeSound()
         {
-            int latency;
-            // Wait until the recording has started. Should clear delay
-            while (!((latency = Microphone.GetPosition(audioInputDevice)) > 0)) { }
 
             Audio.GetSpectrumData(_spectrum, 0, FFTWindow.BlackmanHarris);
             ValueAndIndex[] samplesAndIndices = new ValueAndIndex[QSamples];
@@ -198,14 +209,14 @@ namespace Assets.Scripts.AudioControl.Core
             }
 
             // Init approx (with 0 if diff is larger than first freq or first freq = 0, else normal average of freq / (freq / diff))
-            approx = (sampleIndicies[0] == 0 || sampleIndicies[0] / minDiff == 0) ? 0 : 
+            approx = (sampleIndicies[0] == 0 || sampleIndicies[0] / minDiff == 0) ? 0 :
                 sampleIndicies[0] / (sampleIndicies[0] / minDiff);
 
             // Rolling average
             for (int i = 1; i < sampleIndicies.Length; i++)
             {
                 // Return 0 if sampleIndicies[i] / minDiff == 0 to avoid division by 0
-                approx = ((approx * i) + 
+                approx = ((approx * i) +
                     ((sampleIndicies[i] / minDiff) == 0 ? 0 : (sampleIndicies[i] / (sampleIndicies[i] / minDiff)))) / (i + 1);
             }
 
@@ -233,5 +244,142 @@ namespace Assets.Scripts.AudioControl.Core
             // get sound spectrum
             if (DbValue < minDbValue) DbValue = minDbValue;
         }
+
+        #region Mic Options
+        /// <summary>Loads recording device names into DropDown</summary>
+        /// <returns>status string</returns>
+        //private string LoadMicrophoneDevices()
+        //{
+        //    if (Microphone.devices.Length <= 0)
+        //        return ("Microphone not connected!");
+
+        //    DropDownMicrophone.ClearOptions();
+        //    ListDevice = new List<string>();
+
+        //    foreach (string device in Microphone.devices)
+        //        ListDevice.Add(device);
+
+        //    DropDownMicrophone.AddOptions(ListDevice);
+        //    return "Recording devices loaded";
+        //}
+
+        //private void Start()
+        //{
+        //    SetupGlobalAudio();
+        //    SetupAudioSource();
+        //    //setup listeners in code to make less confusing later on
+        //    ButtonRecord.onClick.AddListener(Button_Click);
+        //    DropDownMicrophone.onValueChanged.AddListener(DropDown_Changed);
+
+        //    ButtonText = ButtonRecord.GetComponentInChildren<Text>();
+        //    TextStatus.text = LoadMicrophoneDevices();
+        //}
+        #endregion
+
+        #region Helpers
+        /// <summary>Set = Start / stop mic recording. Get = Microphone.IsRecording</summary>
+        private bool IsRecording
+        {
+            get { return Microphone.IsRecording(audioInputDevice); }
+            set
+            {
+                if (value) //true
+                {
+                    if (!Microphone.IsRecording(audioInputDevice))
+                    {
+                        //Start recording and store the audio captured from the microphone at the AudioClip in the AudioSource
+                        Audio.clip = Microphone.Start(audioInputDevice, true, micRecordLength, micSampleRate);// maxFreq);
+                        if (!(RecordHeadPosition > 0)) { }          //wait for mic ready
+                        Audio.loop = true;                    //continual output
+                        Audio.mute = false;                   //Hack for bug
+                        Audio.PlayDelayed(latencyBuffer);     //must be delayed or bad results
+                    }
+                }
+                else //false
+                {
+                    if (Microphone.IsRecording(audioInputDevice))
+                    {
+                        Microphone.End(audioInputDevice);//ListDevice[selectedDevice]);
+                        Audio.clip = null;
+                        Audio.loop = false;
+                    }
+                }
+            }
+        }
+
+        private int RecordHeadPosition
+        {
+            get { return Microphone.GetPosition(audioInputDevice); }//ListDevice[selectedDevice]); }
+        }
+
+        private void Record()
+        {
+            if (!IsRecording)
+            {
+                IsRecording = true;
+                //ButtonText.text = "Stop";
+                //TextStatus.text = "Recording";
+            }
+            else
+            {
+                //TextStatus.text = "Device is already recording...";
+            }
+        }
+        #endregion
+
+        #region Everything below is for calculating and auto setting latency
+        static int Read_Position = 0;
+        static int Max_Latency = 0;
+        static int old_Write_Position = 0;
+        static bool Reload = false;
+
+        private void HandleLatency()
+        {
+            if (IsRecording)
+            {
+                float latencySeconds = (float)Max_Latency / AudioSettings.outputSampleRate;
+                //TextStatus.text = Max_Latency.ToString() + " Samples / " + AudioSettings.outputSampleRate.ToString() + " samplerate = " + latencySeconds.ToString() + " seconds Latency";
+
+                //auto select best latency value
+                if (Max_Latency > latencyBuffer * micSampleRate || latencySeconds > maxLatencySeconds)
+                {
+                    Debug.Log("Latency got out of hand!\n" + Max_Latency.ToString() + " Samples / " + AudioSettings.outputSampleRate.ToString() + " samplerate = " + latencySeconds.ToString() + " seconds Latency\nRestarting record...");
+                    latencyBuffer = Mathf.Max(latencyBuffer, ((float)Max_Latency / micSampleRate) + 0.01f);
+
+                    // Restart recording
+                    IsRecording = false;
+                    IsRecording = true;
+                    Reload = true;
+                }
+            }
+        }
+
+        private void OnAudioFilterRead(float[] data, int channels)
+        {
+            if (Reload)
+            {
+                Max_Latency = 0;
+                Read_Position = 0;
+                old_Write_Position = 0;
+                Reload = false;
+            }
+
+            Read_Position += data.Length;
+            int Write_Position = Microphone.GetPosition(audioInputDevice);
+
+            if (Write_Position < old_Write_Position)    //Check if write buffer looped
+            {
+                Read_Position = data.Length;
+            }
+
+            //latency in samples
+            int Latency = Read_Position - Write_Position;
+
+            if (Latency > Max_Latency)
+                Max_Latency = Latency;
+
+            old_Write_Position = Write_Position;
+        }
+        #endregion
     }
 }

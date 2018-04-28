@@ -998,6 +998,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114037108934060228, guid: 8081b6f63a21c744b8df8f4b103ebf23,
+        type: 2}
+      propertyPath: maxLatencySeconds
+      value: 0.03
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8081b6f63a21c744b8df8f4b103ebf23, type: 2}
   m_IsPrefabParent: 0

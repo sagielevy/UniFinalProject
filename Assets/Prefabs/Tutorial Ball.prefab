@@ -51,14 +51,14 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1888412968272330}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: a3384ef3e2313034f9016ad8a1f3999f, type: 2}
+  - {fileID: 2100000, guid: 7635fee0ed23c784a8fc5c7ebdb03d6b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -119,6 +119,7 @@ MonoBehaviour:
   drag: 0.4
   angularDrag: 0.05
   initialPosition: {x: 0, y: 0, z: 0}
+  calibrationInsturcted: {fileID: 0}
 --- !u!135 &135524610345207734
 SphereCollider:
   m_ObjectHideFlags: 1

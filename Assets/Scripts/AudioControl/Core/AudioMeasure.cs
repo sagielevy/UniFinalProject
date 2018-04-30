@@ -19,6 +19,8 @@ namespace Assets.Scripts.AudioControl.Core
 
         private AudioSource Audio;
         private string audioInputDevice;
+        private const string devicePrefix = "DevLatency_";
+        private const int numTests = 10;
         private const int micSampleRate = 44100;
         private const int QSamples = 1024;
         private const float RefValue = 0.1f;
@@ -45,7 +47,8 @@ namespace Assets.Scripts.AudioControl.Core
         [Tooltip("Seconds until mic input is played through audio source. Too short = artifacts")]
         public float latencyBuffer = 0.001f;
         [Tooltip("Max latency allowed. If this value is too small the mic will constantly restart!")]
-        public float maxLatencySeconds = 0.03f;
+        public float maxLatencySeconds = 0.033f; // TODO Check if latency errors arise X times in T time and if so warn user or something.
+        // Also maybe test the best latency values possible by restarting the device and calculating it multiple times and selecting the best as minimum?
         #endregion
 
         private struct ValueAndIndex : IComparable<ValueAndIndex>
@@ -332,6 +335,35 @@ namespace Assets.Scripts.AudioControl.Core
         static int Max_Latency = 0;
         static int old_Write_Position = 0;
         static bool Reload = false;
+
+        private IEnumerator TestAndSetLatency(string deviceName)
+        {
+            if (PlayerPrefs.HasKey(devicePrefix + deviceName))
+            {
+                yield return PlayerPrefs.GetFloat(devicePrefix + deviceName);
+            }
+            else
+            {
+                // Test multiple times. Set closer to best
+                float[] tests = new float[numTests];
+
+                for (int i = 0; i < numTests; i++)
+                {
+                    IsRecording = false;
+                    IsRecording = true;
+
+                    // Wait for some time after restart recorder
+                    yield return new WaitForSeconds(1);
+                    float latencySeconds = (float)Max_Latency / AudioSettings.outputSampleRate;
+                    tests[i] = latencySeconds;
+                }
+
+                Array.Sort(tests);
+
+                // Take the top 20% result
+                yield return tests[(numTests - 1) - (int)(numTests * 0.2f)];
+            }
+        }
 
         private void HandleLatency()
         {

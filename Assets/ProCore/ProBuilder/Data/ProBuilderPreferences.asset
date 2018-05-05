@@ -15,12 +15,14 @@ MonoBehaviour:
   - pbIconGUI
   - pbDragSelectWholeElement
   - pbEnableBackfaceSelection
+  - pb_TorusUsesInnerOuterMethod
   m_Int_keys:
   - pbDefaultEditLevel
   - pbDefaultSelectionMode
   - pb_GIWorkflowMode
   - pbHandleAlignment
   - pbDragSelectMode
+  - pbMirrorObjectScale
   m_Float_keys:
   - pbEditorScroll.x
   - pbEditorScroll.y
@@ -28,8 +30,8 @@ MonoBehaviour:
   - pbCurrentMaterialPalette
   m_Color_keys: []
   m_Material_keys: []
-  m_Bool_values: 010101
-  m_Int_values: 0000000002000000000000000100000001000000
+  m_Bool_values: 01010001
+  m_Int_values: 01000000000000000000000001000000020000000a000000
   m_Float_values:
   - 0
   - 0

@@ -8,9 +8,11 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.Vehicles.Car;
 
 namespace Assets.Scripts.GameScripts
 {
+    [RequireComponent(typeof(CarController))]
     [RequireComponent(typeof(Rigidbody))]
     public class BallManager : MonoBehaviour
     {
@@ -23,20 +25,28 @@ namespace Assets.Scripts.GameScripts
         public float angularDrag = 0.05f;
         public Vector3 initialPosition;
         private Rigidbody body;
-        private Fading fading;
         private OffsetsProfile PitchOffset, DbOffset;
         private PitchControl PitchControl;
         private DecibelControl DecibelControl;
         private IEnumerator levelLoader;
         private bool startLoadingNewLevel = false;
 
+        private CarController m_Car; // the car controller we want to use
+
+
+        private void Awake()
+        {
+            // get the car controller
+            m_Car = GetComponent<CarController>();
+        }
+
         private void Start()
         {
             // Change rigidbody values as set
-            body = GetComponent<Rigidbody>();
-            body.maxAngularVelocity = maxVelocity;
-            body.drag = drag;
-            body.angularDrag = angularDrag;
+            //body = GetComponent<Rigidbody>();
+            //body.maxAngularVelocity = maxVelocity;
+            //body.drag = drag;
+            //body.angularDrag = angularDrag;
 
             // Load player data
             var profiles = Helpers.LoadPlayerProfile(PlayerPrefs.GetString(Helpers.playerPrefsKey));
@@ -45,34 +55,29 @@ namespace Assets.Scripts.GameScripts
             DbOffset = profiles[Helpers.volFileName];
             PitchControl = new PitchControl(PitchOffset);
             DecibelControl = new DecibelControl(DbOffset);
-            levelLoader = LoadNewLevel();
-            fading = GameObject.Find("Fading").GetComponent<Fading>();
-
-            // Fade in if necessary
-            fading.BeginFade(Fading.FadeIn);
-
-            // TODO Set max velocity and forceScale according to currnet level and difficulty
         }
 
         public void FixedUpdate()
         {
-            // Move ball!
-            float xAcc = DecibelControl.IsInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) : PitchControl.NoData;
-            float zAcc = DecibelControl.SoundForce(MicIn.DbValue);
+            // Move object!
+            float h = DecibelControl.IsInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) : PitchControl.NoData;
+            float v = DecibelControl.SoundForce(MicIn.DbValue);
 
-            body.AddForce(new Vector3(xAcc * forceScale, 0, zAcc * forceScale));
+            //body.AddForce(new Vector3(xAcc * forceScale, 0, zAcc * forceScale));
+
+            m_Car.Move(h, v, v, 0f);
 
             // Check if to reset level
-            if (transform.position.y < levelFloorY)
-            {
-                LevelRestart();
-            }
+            //if (transform.position.y < levelFloorY)
+            //{
+            //    LevelRestart();
+            //}
 
             // Start level loader coroutine
-            if (startLoadingNewLevel)
-            {
-                StartCoroutine(levelLoader);
-            }
+            //if (startLoadingNewLevel)
+            //{
+            //    StartCoroutine(levelLoader);
+            //}
         }
 
         private void LevelRestart()
@@ -81,31 +86,6 @@ namespace Assets.Scripts.GameScripts
             body.position = initialPosition;
             body.velocity = Vector3.zero;
             body.angularVelocity = Vector3.zero;
-        }
-
-        // Fade out then load
-        IEnumerator LoadNewLevel()
-        {
-            fading.BeginFade(Fading.FadeOut);
-
-            while (!fading.IsComplete())
-            {
-                yield return null;
-            }
-
-            var nextLevel = currLevelIndex + 1 + Constants.FirstLevelSceneBuildIndex;
-
-            // Load next level. Make sure it exists?
-            if (SceneManager.sceneCountInBuildSettings > nextLevel)
-            {
-                SceneManager.LoadScene(nextLevel);
-            }
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            // If reached the finish line
-            startLoadingNewLevel = startLoadingNewLevel || (collision.transform.CompareTag("Finish"));
         }
     }
 }

@@ -12,14 +12,5 @@ EditorBuildSettings:
     path: Assets/Scenes/Calibrate.unity
     guid: b0a776556e4dae54c93555129900c6de
   - enabled: 1
-    path: Assets/Scenes/Level 0.unity
-    guid: e17fcd6974511d1439a62b04eb9523aa
-  - enabled: 1
-    path: Assets/Scenes/Level 1.unity
-    guid: abeb704dd887d4e49a57948f1b9ce7fa
-  - enabled: 1
-    path: Assets/Scenes/Level 2.unity
-    guid: c7de8939c5d625446b8981d9715ef6da
-  - enabled: 1
-    path: Assets/Scenes/Level 3.unity
-    guid: 1eb074f26032800429efb46d8413cb74
+    path: Assets/Scenes/race_track_lake.unity
+    guid: 2e1336748f3797f4798cf9e588e2620f

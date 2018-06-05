@@ -14,7 +14,7 @@ namespace Assets.Scripts.GameScripts
 {
     [RequireComponent(typeof(CarController))]
     [RequireComponent(typeof(Rigidbody))]
-    public class BallManager : MonoBehaviour
+    public class VoiceController : MonoBehaviour
     {
         public int currLevelIndex = 0;
         public AudioMeasure MicIn;

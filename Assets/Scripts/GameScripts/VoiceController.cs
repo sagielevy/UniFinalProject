@@ -16,20 +16,14 @@ namespace Assets.Scripts.GameScripts
     [RequireComponent(typeof(Rigidbody))]
     public class VoiceController : MonoBehaviour
     {
-        public int currLevelIndex = 0;
         public AudioMeasure MicIn;
-        public float forceScale = 1.0f;
-        public float maxVelocity = 6.0f;
-        public float levelFloorY = -10; // The "ground". The level should reset if the ball has reached this "plane"
-        public float drag = 0;
-        public float angularDrag = 0.05f;
-        public Vector3 initialPosition;
-        private Rigidbody body;
+        public MeshCollider LevelComplete;
         private OffsetsProfile PitchOffset, DbOffset;
         private PitchControl PitchControl;
         private DecibelControl DecibelControl;
-        private IEnumerator levelLoader;
-        private bool startLoadingNewLevel = false;
+        private IEnumerator loadMain;
+        private bool hasFinished = false;
+        private Fading fading;
 
         private CarController m_Car; // the car controller we want to use
 
@@ -38,16 +32,11 @@ namespace Assets.Scripts.GameScripts
         {
             // get the car controller
             m_Car = GetComponent<CarController>();
+            fading = GameObject.Find("Fading").GetComponent<Fading>();
         }
 
         private void Start()
         {
-            // Change rigidbody values as set
-            //body = GetComponent<Rigidbody>();
-            //body.maxAngularVelocity = maxVelocity;
-            //body.drag = drag;
-            //body.angularDrag = angularDrag;
-
             // Load player data
             var profiles = Helpers.LoadPlayerProfile(PlayerPrefs.GetString(Helpers.playerPrefsKey));
 
@@ -55,6 +44,8 @@ namespace Assets.Scripts.GameScripts
             DbOffset = profiles[Helpers.volFileName];
             PitchControl = new PitchControl(PitchOffset);
             DecibelControl = new DecibelControl(DbOffset);
+
+            loadMain = LoadNewLevel();
         }
 
         public void FixedUpdate()
@@ -63,29 +54,32 @@ namespace Assets.Scripts.GameScripts
             float h = DecibelControl.IsInputValid(MicIn.DbValue) ? PitchControl.SoundForce(MicIn.PitchValue) : PitchControl.NoData;
             float v = DecibelControl.SoundForce(MicIn.DbValue);
 
-            //body.AddForce(new Vector3(xAcc * forceScale, 0, zAcc * forceScale));
-
             m_Car.Move(h, v, v, 0f);
 
-            // Check if to reset level
-            //if (transform.position.y < levelFloorY)
-            //{
-            //    LevelRestart();
-            //}
-
             // Start level loader coroutine
-            //if (startLoadingNewLevel)
-            //{
-            //    StartCoroutine(levelLoader);
-            //}
+            if (hasFinished)
+            {
+                StartCoroutine(loadMain);
+            }
         }
 
-        private void LevelRestart()
+        // Fade out then load
+        IEnumerator LoadNewLevel()
         {
-            // Reset ball position and velocity
-            body.position = initialPosition;
-            body.velocity = Vector3.zero;
-            body.angularVelocity = Vector3.zero;
+            fading.BeginFade(Fading.FadeOut);
+
+            while (!fading.IsComplete())
+            {
+                yield return null;
+            }
+
+            SceneManager.LoadScene(Constants.MainMenu);
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            // If reached the finish line
+            hasFinished = hasFinished || (collision.transform.CompareTag("End"));
         }
     }
 }

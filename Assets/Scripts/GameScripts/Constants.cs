@@ -9,5 +9,6 @@ namespace Assets.Scripts.GameScripts
     {
         // This is assuming all other scenes are the first indices in the build order
         public const int FirstLevelSceneBuildIndex = 2;
+        public const int MainMenu = 0;
     }
 }

@@ -3463,7 +3463,7 @@ RectTransform:
   m_Children:
   - {fileID: 705374185}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -8455,72 +8455,6 @@ BoxCollider:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: c92bea14e5c4591408be760558da7b90, type: 3}
   m_PrefabInternal: {fileID: 1559622049}
---- !u!1001 &1572225522
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4169808469176230, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4169808469176230, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4169808469176230, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4169808469176230, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4169808469176230, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4169808469176230, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4169808469176230, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4169808469176230, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 212720815871975444, guid: 5f3141002247b4b43be4226a79a0d419,
-        type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 7cb1a0457b8f8be4497509c26e7cc242,
-        type: 3}
-    - target: {fileID: 1867389844888530, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_Name
-      value: WindRose
-      objectReference: {fileID: 0}
-    - target: {fileID: 114083700759805306, guid: 5f3141002247b4b43be4226a79a0d419,
-        type: 2}
-      propertyPath: MarkHit
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114083700759805306, guid: 5f3141002247b4b43be4226a79a0d419,
-        type: 2}
-      propertyPath: MicIn
-      value: 
-      objectReference: {fileID: 1495675113}
-    - target: {fileID: 1867389844888530, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 5f3141002247b4b43be4226a79a0d419, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &1586892418
 Prefab:
   m_ObjectHideFlags: 0
@@ -10346,7 +10280,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1926676248
 Prefab:

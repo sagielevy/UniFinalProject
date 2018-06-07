@@ -22,7 +22,7 @@ namespace Assets.Scripts.GameScripts
         private DecibelControl DecibelControl;
         private IEnumerator loadMain;
         private bool hasFinished = false;
-        private Fading fading;
+        private Fader fader;
 
         private CarController m_Car; // the car controller we want to use
 
@@ -31,7 +31,7 @@ namespace Assets.Scripts.GameScripts
         {
             // get the car controller
             m_Car = GetComponent<CarController>();
-            fading = GameObject.Find("Fading").GetComponent<Fading>();
+            fader = GameObject.Find("Fader").GetComponent<Fader>();
         }
 
         private void Start()
@@ -65,9 +65,9 @@ namespace Assets.Scripts.GameScripts
         // Fade out then load
         IEnumerator LoadNewLevel()
         {
-            fading.BeginFade(Fading.FadeOut);
+            fader.BeginFade(Fader.FadeOut);
 
-            while (!fading.IsComplete())
+            while (!fader.IsComplete())
             {
                 yield return null;
             }

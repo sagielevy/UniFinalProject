@@ -1,0 +1,291 @@
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.SkidTrail/<Start>c__Iterator0/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.SkidTrail/<Start>c__Iterator0/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.SkidTrail/<Start>c__Iterator0::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.SkidTrail/<Start>c__Iterator0::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.SkidTrail/<Start>c__Iterator0::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.SkidTrail/<Start>c__Iterator0::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.SkidTrail/<Start>c__Iterator0::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<ReloadLevel>c__Iterator2/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<ReloadLevel>c__Iterator2/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<ReloadLevel>c__Iterator2::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<ReloadLevel>c__Iterator2::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<ReloadLevel>c__Iterator2::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<ReloadLevel>c__Iterator2::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<ReloadLevel>c__Iterator2::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Deactivate>c__Iterator1/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Deactivate>c__Iterator1/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Deactivate>c__Iterator1::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Deactivate>c__Iterator1::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Deactivate>c__Iterator1::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Deactivate>c__Iterator1::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Deactivate>c__Iterator1::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Activate>c__Iterator0/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Activate>c__Iterator0/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Activate>c__Iterator0::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Activate>c__Iterator0::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Activate>c__Iterator0::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Activate>c__Iterator0::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.TimedObjectActivator/<Activate>c__Iterator0::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ParticleSystemDestroyer/<Start>c__Iterator0/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ParticleSystemDestroyer/<Start>c__Iterator0/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ParticleSystemDestroyer/<Start>c__Iterator0::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ParticleSystemDestroyer/<Start>c__Iterator0::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ParticleSystemDestroyer/<Start>c__Iterator0::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ParticleSystemDestroyer/<Start>c__Iterator0::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ParticleSystemDestroyer/<Start>c__Iterator0::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ObjectResetter/<ResetCoroutine>c__Iterator0/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ObjectResetter/<ResetCoroutine>c__Iterator0/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ObjectResetter/<ResetCoroutine>c__Iterator0::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ObjectResetter/<ResetCoroutine>c__Iterator0::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ObjectResetter/<ResetCoroutine>c__Iterator0::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ObjectResetter/<ResetCoroutine>c__Iterator0::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Utility.ObjectResetter/<ResetCoroutine>c__Iterator0::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp-firstpass].NetObf.Test/Vwr34FbdbFWwqpu5dCn3sgLp4::DFd43fx System.Void()
+Reason00: 
+---------
+Reference: [Assembly-CSharp-firstpass].NetObf.Test/湖草空間例子忘記要記住::間例 System.Void()
+Reason00: 
+---------
+Reference: [Assembly-CSharp-firstpass].NetObf.ResourcesTools::GetResourceStreamBytes System.Byte[]([mscorlib].System.Reflection.Assembly,[mscorlib].System.String)
+Reason00: is public & flag IsDontRename_PublicElements_in_Class
+---------
+Reference: [Assembly-CSharp-firstpass].NetObf.ResourcesTools::GetResourceStreamString System.String([mscorlib].System.Reflection.Assembly,[mscorlib].System.String)
+Reason00: is public & flag IsDontRename_PublicElements_in_Class
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0::$this
+Reason08: attribute: UnityEngine.RequireComponent
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0::$current
+Reason08: attribute: UnityEngine.RequireComponent
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0::$disposing
+Reason08: attribute: UnityEngine.RequireComponent
+---------
+Reference: [Assembly-CSharp-firstpass].UnityStandardAssets.Vehicles.Car.WheelEffects/<StartSkidTrail>c__Iterator0::$PC
+Reason08: attribute: UnityEngine.RequireComponent
+---------
+Reference: [Assembly-CSharp-firstpass].NetObf.Test/.Vwr34FbdbFWwqpu5dCn3sgLp4
+Reason00: 
+---------
+Reference: [Assembly-CSharp-firstpass].NetObf.Test/.湖草空間例子忘記要記住
+Reason00: 
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.UI.Calibrate/<HandleCalibration>c__Iterator0/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.UI.Calibrate/<HandleCalibration>c__Iterator0/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.UI.Calibrate/<HandleCalibration>c__Iterator0::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.UI.Calibrate/<HandleCalibration>c__Iterator0::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.UI.Calibrate/<HandleCalibration>c__Iterator0::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.UI.Calibrate/<HandleCalibration>c__Iterator0::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.UI.Calibrate/<HandleCalibration>c__Iterator0::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleMiddleFirst/<Calibrate>c__Iterator0/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleMiddleFirst/<Calibrate>c__Iterator0/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleMiddleFirst/<Calibrate>c__Iterator0::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleMiddleFirst/<Calibrate>c__Iterator0::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleMiddleFirst/<Calibrate>c__Iterator0::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleMiddleFirst/<Calibrate>c__Iterator0::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleMiddleFirst/<Calibrate>c__Iterator0::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleLowFirst/<Calibrate>c__Iterator0/System.Collections.Generic.IEnumerator<object>.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleLowFirst/<Calibrate>c__Iterator0/System.Collections.IEnumerator.Current
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleLowFirst/<Calibrate>c__Iterator0::MoveNext System.Boolean()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleLowFirst/<Calibrate>c__Iterator0::System.Collections.Generic.IEnumerator<object>.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleLowFirst/<Calibrate>c__Iterator0::System.Collections.IEnumerator.get_Current System.Object()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleLowFirst/<Calibrate>c__Iterator0::Dispose System.Void()
+Reason00: is virtual
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.AudioControl.CalibrationTypes.CalibrationStyleLowFirst/<Calibrate>c__Iterator0::Reset System.Void()
+Reason00: by exclude table unity function names
+---------
+Reference: [Assembly-CSharp].NetObf.Test/Vwr34FbdbFWwqpu5dCn3sgLp4::DFd43fx System.Void()
+Reason00: 
+---------
+Reference: [Assembly-CSharp].NetObf.Test/湖草空間例子忘記要記住::間例 System.Void()
+Reason00: 
+---------
+Reference: [Assembly-CSharp].NetObf.ResourcesTools::GetResourceStreamBytes System.Byte[]([mscorlib].System.Reflection.Assembly,[mscorlib].System.String)
+Reason00: is public & flag IsDontRename_PublicElements_in_Class
+---------
+Reference: [Assembly-CSharp].NetObf.ResourcesTools::GetResourceStreamString System.String([mscorlib].System.Reflection.Assembly,[mscorlib].System.String)
+Reason00: is public & flag IsDontRename_PublicElements_in_Class
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0::$this
+Reason08: attribute: UnityEngine.RequireComponent
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0::$current
+Reason08: attribute: UnityEngine.RequireComponent
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0::$disposing
+Reason08: attribute: UnityEngine.RequireComponent
+---------
+Reference: [Assembly-CSharp].Assets.Scripts.GameScripts.VoiceController/<LoadNewLevel>c__Iterator0::$PC
+Reason08: attribute: UnityEngine.RequireComponent
+---------
+Reference: [Assembly-CSharp].NetObf.Test/.Vwr34FbdbFWwqpu5dCn3sgLp4
+Reason00: 
+---------
+Reference: [Assembly-CSharp].NetObf.Test/.湖草空間例子忘記要記住
+Reason00: 

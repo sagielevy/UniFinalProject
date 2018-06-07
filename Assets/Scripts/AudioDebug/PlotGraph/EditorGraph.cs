@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +12,6 @@ namespace Assets.Scripts.AudioDebug.PlotGraph
 {
     public class EditorGraph : EditorWindow
     {
-
         [MenuItem("Window/Graph")]
         static void ShowGraph()
         {
@@ -111,3 +112,4 @@ namespace Assets.Scripts.AudioDebug.PlotGraph
         }
     }
 }
+#endif

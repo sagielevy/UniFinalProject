@@ -17,7 +17,6 @@ namespace Assets.Scripts.GameScripts
     public class VoiceController : MonoBehaviour
     {
         public AudioMeasure MicIn;
-        public MeshCollider LevelComplete;
         private OffsetsProfile PitchOffset, DbOffset;
         private PitchControl PitchControl;
         private DecibelControl DecibelControl;
@@ -76,10 +75,10 @@ namespace Assets.Scripts.GameScripts
             SceneManager.LoadScene(Constants.MainMenu);
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider other)
         {
             // If reached the finish line
-            hasFinished = hasFinished || (collision.transform.CompareTag("End"));
+            hasFinished = hasFinished || (other.CompareTag("End"));
         }
     }
 }
